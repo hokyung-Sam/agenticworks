@@ -359,12 +359,13 @@ h1,h2,h3{margin:0;font-weight:inherit;text-wrap:balance}
 .card3 .kw{font-size:18px;line-height:1.5;color:#1a1a1e;margin-top:24px}
 .card3 .more{display:inline-block;margin-top:32px;font-family:var(--f-en);font-weight:800;font-size:24px;color:#2a99e3}
 .card3 .more:hover{text-decoration:underline}
-.cmp-wrap{overflow-x:auto}
-.cmp{width:1254px;max-width:100%;border:2px solid #ececf0;border-radius:0 0 22px 22px;border-collapse:separate;border-spacing:0;overflow:hidden;background:#fff;color:#555559}
-.cmp th,.cmp td{text-align:left;padding:0 20px 0 39px;height:113px;font-size:20px;line-height:30px;border-bottom:2px solid #ececf0}
+.cmp-wrap{overflow-x:auto;margin-inline:-7px}
+.cmp{width:100%;min-width:900px;table-layout:fixed;border:2px solid #ececf0;border-radius:20px;border-collapse:separate;border-spacing:0;overflow:hidden;background:#fff;color:#555559}
+.cmp col.c1{width:240px}
+.cmp th,.cmp td{text-align:left;padding:24px 20px 24px 39px;font-size:20px;line-height:30px;border-bottom:2px solid #ececf0}
 .cmp tr:last-child td,.cmp tr:last-child th{border-bottom:0}
-.cmp thead th{height:104px;background:#f2f3f7;font-weight:700;font-size:24px;padding-bottom:14px}
-.cmp tbody th{background:#fafafc;font-weight:500;width:227px}
+.cmp thead th{background:#f2f3f7;font-weight:700}
+.cmp tbody th{background:#fafafc;font-weight:500}
 .cmp tbody tr:hover td{background:#fbf8ff}
 
 /* Support FAQ (card style) */
@@ -793,6 +794,7 @@ body.locked{overflow:hidden}
       <div class="sec-row"><h2 class="h-xb">도입검토 세부기준</h2></div>
       <div class="cmp-wrap">
         <table class="cmp">
+          <colgroup><col class="c1"><col><col><col></colgroup>
           <thead><tr><th scope="col">구분</th><th scope="col">On-Premise</th><th scope="col">Cloud</th><th scope="col">Hybrid</th></tr></thead>
           <tbody>
             <tr><th scope="row">데이터 위치</th><td>고객 데이터센터 내</td><td>고객 클라우드 계정 (VPC)</td><td>내부 + 클라우드 분산</td></tr>
