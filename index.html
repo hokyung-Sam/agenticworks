@@ -1,0 +1,1260 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AgenticWorks Main</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arvo&family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500&display=swap">
+<style>
+/* Layout: Figma 1920 artboard, 1632px content column framed by hairline grid lines (x=144 / x=1776). Single light theme by design. */
+@font-face{font-family:"Pretendard";font-weight:300;font-display:swap;src:url("fonts/Pretendard-Light.woff2") format("woff2")}
+@font-face{font-family:"Pretendard";font-weight:400;font-display:swap;src:url("fonts/Pretendard-Regular.woff2") format("woff2")}
+@font-face{font-family:"Pretendard";font-weight:500;font-display:swap;src:url("fonts/Pretendard-Medium.woff2") format("woff2")}
+@font-face{font-family:"Pretendard";font-weight:600 800;font-display:swap;src:url("fonts/Pretendard-Bold.woff2") format("woff2")}
+:root{
+  color-scheme:light;
+  --bg:#fafafa; --surface:#ffffff; --ink:#292929; --ink-2:#4e4e4e; --ink-3:#999999;
+  --line:#d9d9d9; --dark:#292929; --on-dark:#f5f5f5; --cta-ink:#3d3d3d;
+  --red:#ff312e; --pink:#f02ef0; --purple:#971eff;
+  --grad:linear-gradient(90deg,var(--red) 0%,var(--pink) 50%,var(--purple) 100%);
+  --f-display:"Arvo",Georgia,serif;
+  --f-kr:"Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --f-en:"Inter","Pretendard",-apple-system,"Apple SD Gothic Neo",sans-serif;
+  --f-cta:"Plus Jakarta Sans","Inter",sans-serif;
+  --col:1632px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-kr);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--surface)}
+img{max-width:100%;display:block}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--purple);outline-offset:3px}
+p{margin:0}
+h1,h2,h3{margin:0;font-weight:inherit;text-wrap:balance}
+
+.gutter{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.col{max-width:var(--col);margin:0 auto;position:relative}
+.col.framed{border-left:1px solid var(--line);border-right:1px solid var(--line)}
+
+/* ---------- GNB ---------- */
+.gnb{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--surface);height:80px;display:flex;align-items:center;justify-content:space-between;
+  padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(32px,env(safe-area-inset-right,0px));transition:box-shadow .2s}
+.gnb.scrolled{box-shadow:0 1px 0 var(--line)}
+.gnb-left{display:flex;align-items:center;gap:40px;min-width:0}
+.gnb-logo img{width:155px;height:24px}
+.gnb-menu{display:flex;gap:32px;font-family:var(--f-en);font-weight:500;font-size:16px}
+.gnb-menu a{position:relative;padding-block:4px}
+.gnb-menu a::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform .25s}
+.gnb-menu a:hover::after{transform:scaleX(1)}
+.gnb-right{display:flex;gap:8px;align-items:center}
+.lang{position:relative}
+.lang-btn{height:40px;display:flex;align-items:center;gap:4px;padding:8px 10px 8px 16px;border:1px solid var(--line);border-radius:4px;font-family:var(--f-en);font-size:12px}
+.lang-btn svg{transition:transform .2s}
+.lang[data-open] .lang-btn svg{transform:rotate(180deg)}
+.lang-list{position:absolute;right:0;top:44px;min-width:100%;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:4px;list-style:none;margin:0;font-family:var(--f-en);font-size:12px;box-shadow:0 8px 24px rgba(41,41,41,.08)}
+.lang-list button{width:100%;text-align:left;padding:8px 12px;border-radius:3px;white-space:nowrap}
+.lang-list button:hover,.lang-list button[aria-checked="true"]{background:var(--bg)}
+.btn-grad{height:40px;display:inline-flex;align-items:center;padding:8px 16px;border-radius:4px;background:var(--grad);background-size:150% 100%;color:#fff;font-family:var(--f-en);font-weight:500;font-size:14px;transition:background-position .3s}
+.btn-grad:hover{background-position:100% 0}
+
+/* ---------- shared section header ---------- */
+.eyebrow{width:114px;height:30px;display:flex;align-items:center;justify-content:center;border-top:1px solid var(--red);border-bottom:1px solid var(--red);
+  font-family:var(--f-en);font-weight:700;font-size:12px;letter-spacing:.04em}
+.eyebrow span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.eyebrow.mono{border-color:currentColor}
+.eyebrow.mono span{background:none;color:inherit}
+.sec-head{display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center;padding-top:100px}
+.sec-head .copy{display:flex;flex-direction:column;gap:12px}
+.sec-title{font-size:40px;line-height:1.2;font-weight:400}
+.sec-desc{font-weight:300;font-size:16px;line-height:1.6;color:var(--ink-2)}
+
+.link-arrow{display:inline-flex;align-items:center;gap:4px;padding:0 0 8px 4px;border-bottom:1px solid currentColor;font-family:var(--f-en);font-size:13px}
+.link-arrow svg{transition:transform .2s}
+.link-arrow:hover svg{transform:translateX(4px)}
+
+/* ---------- Hero ---------- */
+.hero{border-bottom:1px solid var(--line);background:var(--bg)}
+.hero-top{height:410px;display:flex;flex-direction:column;align-items:center;padding-top:100px;gap:24px;text-align:center}
+.hero-title{position:relative;height:163px;width:100%;overflow:hidden}
+.hero-title h1{position:absolute;inset:0 0 auto;font-family:var(--f-display);font-size:120px;letter-spacing:-.03em;line-height:148px;white-space:nowrap;transition:opacity .6s,transform .6s}
+.hero-title h1[aria-hidden="true"]{opacity:0;transform:translateY(24px)}
+.hero-bar{position:absolute;left:50%;top:157px;width:1112px;max-width:96%;height:6px;background:var(--grad);transform:translateX(-50%) scaleX(1);transform-origin:left}
+.hero-bar.run{animation:bar 6s linear}
+@keyframes bar{from{transform:translateX(-50%) scaleX(0)}to{transform:translateX(-50%) scaleX(1)}}
+.hero-desc{font-size:18px;line-height:1.6}
+.hero-media{border-top:1px solid var(--line)}
+.hero-img{position:relative;height:480px;overflow:hidden}
+.hero-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .8s}
+.hero-img img[aria-hidden="true"]{opacity:0}
+.hero-dots{position:absolute;right:24px;bottom:24px;display:flex;gap:8px;z-index:2}
+.hero-dots button{width:32px;height:4px;background:rgba(255,255,255,.5);border-radius:2px}
+.hero-dots button[aria-current="true"]{background:#fff}
+
+/* ---------- Problem ---------- */
+.problem{height:700px}
+.problem .col{height:100%;display:flex;flex-direction:column}
+.problem .sec-head{flex:none;height:366px;padding-top:100px}
+.challenge-grid{position:relative;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);flex:1}
+.problem{background:linear-gradient(var(--line),var(--line)) 0 366px/100% 1px no-repeat}
+.challenge{padding:56px 40px;display:flex;flex-direction:column;gap:48px;border-left:1px solid var(--line);transition:background .25s}
+.challenge:first-child{border-left:0}
+.challenge:hover{background:var(--surface)}
+.challenge .t{display:flex;flex-direction:column;gap:24px}
+.challenge h3{font-weight:500;font-size:24px}
+.challenge p{font-weight:300;font-size:16px;line-height:1.6;color:var(--ink-2)}
+
+/* ---------- Solution ---------- */
+.solution{background:var(--surface)}
+.solution .sec-head{padding-bottom:48px}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:1px;height:520px}
+.compare figure{margin:0;position:relative;overflow:hidden}
+.compare img{width:100%;height:100%;object-fit:cover}
+.compare .badge{position:absolute;top:32px;left:50%;transform:translateX(-50%);width:98px;padding:8px 0;text-align:center;font-family:var(--f-en);font-weight:500;font-size:13px;letter-spacing:.04em}
+.badge.without{background:rgba(217,217,217,.6);color:var(--ink-2)}
+.badge.tobe{background:linear-gradient(90deg,rgba(240,46,240,.3),rgba(151,30,255,.3));color:var(--purple)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);padding-block:48px}
+.step{padding:0 32px;display:flex;flex-direction:column;gap:24px;border-left:1px solid var(--line);margin-block:-48px;padding-block:48px}
+.step:first-child{border-left:0}
+.step-num{width:32px;height:32px;border:1px solid var(--ink-3);border-radius:50%;display:grid;place-items:center;font-family:var(--f-en);font-weight:500;font-size:12px}
+.step h3{font-family:var(--f-en);font-weight:500;font-size:24px}
+.step p{font-weight:300;font-size:16px;color:var(--ink-2);margin-top:-12px}
+
+/* ---------- Modules ---------- */
+.modules{position:relative;border-bottom:1px solid var(--line);
+  background:linear-gradient(109deg,rgba(255,49,46,.8) 2%,rgba(240,46,240,.8) 49%,rgba(151,30,255,.8) 97%),rgba(255,255,255,.1)}
+.modules .col{border-color:rgba(255,255,255,.35)}
+.mod-head{display:grid;grid-template-columns:1fr 760px;gap:32px;padding:100px 40px 60px;color:#fff}
+.mod-head .left{display:flex;flex-direction:column;gap:24px}
+.mod-head .eyebrow{border-color:#fff;font-size:13px}
+.mod-head h2{font-size:40px;line-height:1.2;font-weight:400}
+.mod-head .right{padding-top:56px;display:flex;flex-direction:column;align-items:flex-start;gap:20px}
+.mod-head .right p{font-weight:300;font-size:16px;line-height:1.6}
+.tabs{display:flex}
+.tab{flex:1 1 0;height:72px;display:flex;align-items:center;justify-content:center;gap:8px;padding:24px 16px;position:relative;background:rgba(255,255,255,.6);
+  font-family:var(--f-en);font-weight:500;font-size:18px;color:var(--ink-3);transition:background .2s,color .2s}
+.tab:first-child,.tab:last-child{flex:0 0 14.3%}
+.tab img{width:21px;height:22px;filter:grayscale(1);opacity:.6;transition:filter .2s,opacity .2s}
+.tab span{opacity:.6;transition:opacity .2s}
+.tab:hover{background:rgba(255,255,255,.85)}
+.tab[aria-selected="true"]{background:var(--surface);color:#000}
+.tab[aria-selected="true"] img,.tab[aria-selected="true"] span{filter:none;opacity:1}
+.tab::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--grad);transition:width .35s}
+.tab[aria-selected="true"]::after{width:100%}
+.mod-panel{position:relative;background:var(--surface);padding:40px;display:grid;grid-template-columns:minmax(0,628px) minmax(0,924px)}
+.mod-panel::before{content:"";position:absolute;left:630px;top:0;bottom:0;width:1px;background:var(--line)}
+.mod-copy{padding:24px;display:flex;flex-direction:column;justify-content:space-between;gap:24px}
+.mod-copy h3{font-weight:500;font-size:32px;line-height:1.4;padding-top:16px;max-width:460px}
+.mod-copy .sub{font-weight:300;font-size:14px;line-height:1.6;color:var(--ink-2);margin-top:8px}
+.mod-copy ul{list-style:none;margin:24px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;font-weight:300;font-size:13px;color:var(--ink-2)}
+.mod-copy .link-arrow{align-self:flex-start;color:var(--ink)}
+.mod-fig{height:508px;border-radius:8px;overflow:hidden;background:var(--surface);display:grid;place-items:center}
+.mod-fig img{width:100%;height:100%;object-fit:contain}
+.mod-panel .swap{transition:opacity .25s}
+.mod-panel.fading .swap{opacity:0}
+
+/* ---------- Use case ---------- */
+.usecase{background:var(--surface)}
+.usecase .sec-head{padding-bottom:48px}
+.stats{display:flex;justify-content:center;gap:24px;padding-block:32px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.stat{width:320px;display:flex;flex-direction:column;gap:4px}
+.stat b{font-family:var(--f-en);font-weight:600;font-size:56px;font-variant-numeric:tabular-nums}
+.stat span{font-weight:300;font-size:16px;color:var(--ink-2)}
+.industries{display:flex;gap:8px;height:500px;padding:40px 40px 40px;box-sizing:content-box}
+.ind{position:relative;overflow:hidden;flex:0 0 208px;color:#fff;text-align:left;transition:flex-basis 1.2s cubic-bezier(.6,0,.2,1)}
+.ind[aria-expanded="true"]{flex:1 1 auto}
+.ind img{position:absolute;top:0;left:50%;height:100%;width:1120px;min-width:100%;max-width:none;object-fit:cover;transform:translateX(-50%)}
+.ind .shade{position:absolute;inset:0;transition:opacity .5s}
+.ind .shade.closed{opacity:1}
+.ind .shade.open{opacity:0;background:linear-gradient(270deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.5) 64%,rgba(0,0,0,.8) 100%)}
+.ind[aria-expanded="true"] .shade.closed{opacity:0}
+.ind[aria-expanded="true"] .shade.open{opacity:1}
+.ind .label{position:absolute;left:40px;top:56px;font-family:var(--f-en);font-weight:500;font-size:14px;letter-spacing:.04em;text-transform:uppercase;transition:left .5s}
+.ind[aria-expanded="true"] .label{left:57px;top:51px}
+.ind .body{position:absolute;left:40px;bottom:56px;width:464px;display:flex;flex-direction:column;gap:40px;opacity:0;transform:translateY(16px);transition:opacity .4s,transform .4s;pointer-events:none}
+.ind[aria-expanded="true"] .body{opacity:1;transform:none;transition-delay:.7s;pointer-events:auto}
+.ind .body h3{font-weight:500;font-size:40px;line-height:1.3}
+.ind .body .tags{font-weight:300;font-size:14px;margin-top:12px;white-space:pre}
+.ind .body .link-arrow{align-self:flex-start;color:#fff}
+.ind .prog{position:absolute;right:40px;top:456px;width:100px;height:4px;background:rgba(255,255,255,.3);opacity:0;transition:opacity .3s}
+.ind[aria-expanded="true"] .prog{opacity:1}
+.ind .prog i{display:block;height:100%;width:0;background:#fff}
+.ind[aria-expanded="true"] .prog i.run{animation:prog 7s linear forwards}
+@keyframes prog{to{width:100%}}
+
+/* ---------- Partner ---------- */
+.partner{border-bottom:1px solid var(--line)}
+.partner .sec-head{padding-bottom:48px}
+.partner .sec-title{font-weight:500}
+.logos{padding:0 40px 120px}
+.logos img{width:100%;height:auto}
+
+/* ---------- Leadership ---------- */
+.leader{background:var(--dark);color:var(--on-dark);position:relative;overflow:hidden}
+.leader .col{border-color:rgba(245,245,245,.12)}
+.leader .swirl{position:absolute;left:calc(50% - 60px);top:-130px;width:1260px;height:auto;pointer-events:none}
+.leader-head{position:relative;padding:100px 40px 0;display:flex;flex-direction:column;gap:24px;align-items:flex-start;color:var(--on-dark)}
+.leader-head .eyebrow{border-color:var(--on-dark);color:var(--on-dark)}
+.leader-head .sec-title{font-weight:500}
+.leader-head .sec-desc{color:var(--ink-3)}
+.slider{position:relative;margin-top:48px;margin-bottom:80px;height:520px;display:grid;grid-template-columns:804px minmax(0,1fr)}
+.slide-text{background:rgba(255,49,46,.05);padding:40px;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+.slide-text h3{font-family:var(--f-en);font-weight:500;font-size:40px;line-height:1.2;max-width:700px}
+.slide-text .desc{font-family:var(--f-en);font-size:16px;line-height:1.4;max-width:543px}
+.slide-text .date{font-family:var(--f-en);font-size:16px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.slide-nav{display:flex;align-items:center;gap:8px}
+.slide-nav button{width:40px;height:40px;display:grid;place-items:center;border-radius:50%;transition:background .2s}
+.slide-nav button:hover{background:rgba(245,245,245,.1)}
+.slide-count{font-family:var(--f-en);font-size:13px;color:var(--ink-3);margin-left:8px;font-variant-numeric:tabular-nums}
+.slide-img{position:relative;overflow:hidden}
+.slide-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .6s}
+.slide-img img[aria-hidden="true"]{opacity:0}
+.slide-text .swap{transition:opacity .3s}
+.slider.fading .slide-text .swap{opacity:0}
+
+/* ---------- FAQ ---------- */
+.faq .col{display:grid;grid-template-columns:552px minmax(0,1fr);padding-bottom:100px}
+.faq-head{padding:100px 40px 0;display:flex;flex-direction:column;gap:24px;border-right:1px solid var(--line);margin-bottom:-100px}
+.faq-head .eyebrow{color:var(--ink)}
+.faq-head h2{font-weight:500;font-size:40px;line-height:1.3}
+.faq-head p{font-weight:300;font-size:16px;line-height:1.6;color:var(--ink-2)}
+.faq-list{margin-top:100px;border-bottom:1px solid var(--line)}
+.faq-item{border-top:1px solid var(--line);transition:background .3s}
+.faq-item.open{background:linear-gradient(rgba(151,30,255,.08),rgba(151,30,255,.08)),var(--surface)}
+.faq-q{width:100%;display:flex;align-items:center;gap:16px;text-align:left;padding:32px 24px 24px 32px;font-weight:500;font-size:20px}
+.faq-q span{flex:1}
+.faq-q svg{flex:none;transition:transform .3s}
+.faq-item.open .faq-q svg{transform:scaleY(-1)}
+.faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s}
+.faq-item.open .faq-a{grid-template-rows:1fr}
+.faq-a > div{overflow:hidden}
+.faq-a p{padding:0 64px 40px 32px;font-size:16px;line-height:1.6;color:var(--ink-2)}
+
+/* ---------- CTA ---------- */
+.cta{margin-top:75px;height:271px;background:url("assets/cta-bg.jpg") center/cover no-repeat,linear-gradient(92deg,var(--pink),var(--purple))}
+.cta .inner{height:100%;max-width:1920px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;padding-left:max(120px,env(safe-area-inset-left,0px));padding-right:max(156px,env(safe-area-inset-right,0px))}
+.cta h2{font-family:var(--f-cta);font-weight:500;font-size:58px;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.4);white-space:nowrap}
+.cta-btn{background:#fff;color:var(--cta-ink);border-radius:6px;padding:20px 46px;font-size:22px;line-height:20px;transition:transform .2s,box-shadow .2s}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.18)}
+
+/* ---------- Footer ---------- */
+.footer{border-top:1px solid var(--line)}
+.footer .col{height:246px;display:flex;justify-content:space-between;padding:79px 40px 0}
+.footer .brand{display:flex;flex-direction:column;gap:12px}
+.footer .brand img{width:206px;height:32px}
+.footer .brand span{font-family:var(--f-en);font-weight:500;font-size:18px}
+.footer .meta{padding-top:27px;width:368px;display:flex;flex-direction:column;gap:12px;color:var(--ink-2)}
+.footer .meta p:first-child{font-weight:300;font-size:12px}
+.footer .meta p:last-child{font-family:var(--f-en);font-weight:300;font-size:11px}
+
+/* ---------- toast ---------- */
+.toast{position:fixed;left:50%;bottom:calc(32px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:6px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:70}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* narrower desktop windows: keep the composition, let it compress */
+@media (max-width:1500px){
+  .mod-head{grid-template-columns:1fr 1fr}
+  .slider{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .faq .col{grid-template-columns:420px minmax(0,1fr)}
+  .stat{width:auto;flex:1}
+}
+@media (max-width:1100px){
+  .hero-title h1{font-size:80px;line-height:148px}
+  .challenge-grid{grid-template-columns:repeat(2,1fr)}
+  .problem{height:auto}
+  .tab span{display:none}
+  .mod-panel{grid-template-columns:1fr}
+  .mod-panel::before{display:none}
+  .mod-fig{height:auto}
+  .cta h2{font-size:40px}
+}
+@media (max-width:700px){
+  .gnb-menu,.lang{display:none}
+  .hero-title h1{font-size:44px;white-space:normal;line-height:1.2}
+  .hero-desc br{display:none}
+  .challenge-grid,.compare,.steps,.slider,.faq .col,.mod-head{grid-template-columns:1fr}
+  .compare,.slider{height:auto}.compare figure{height:300px}.slide-img{height:260px}
+  .industries{height:420px;padding-inline:0}.ind{flex-basis:56px}.ind .body{width:auto;right:24px;left:24px}.ind .body h3{font-size:26px}
+  .faq-head{border-right:0;margin-bottom:0}.faq-list{margin-top:40px}
+  .cta h2{white-space:normal;text-align:center;font-size:32px}.footer .meta{width:auto}
+  .cta .inner{flex-direction:column;justify-content:center;padding-inline:max(16px,env(safe-area-inset-left,0px))}
+  .footer .col{flex-direction:column;height:auto;padding-bottom:40px;gap:24px}
+  .sec-title,.mod-head h2{font-size:28px}
+}
+/* ================= ROUTED PAGES ================= */
+.page[hidden]{display:none!important}
+.gnb-menu a[aria-current="page"]::after{transform:scaleX(1);background:var(--red)}
+
+/* shared sub-page top visual */
+.subvis{position:relative;height:720px;overflow:hidden}
+.subvis .col{height:100%;max-width:1760px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,868px);gap:24px;align-items:center}
+.subvis h1{font-family:var(--f-en);font-weight:400;font-size:72px;letter-spacing:-.03em;line-height:1.2}
+.subvis .lead{font-weight:300;font-size:18px;line-height:1.6;margin-top:40px;max-width:640px}
+.subvis figure{margin:0;height:560px;overflow:hidden}
+.subvis figure img{width:100%;height:100%;object-fit:cover}
+.subvis .copy{position:relative;z-index:1}
+
+/* Modules page */
+.mp-swirl{position:absolute;left:calc(50% - 516px);top:-80px;width:1476px;max-width:none;pointer-events:none;opacity:.9}
+.mp-info{border-top:1px solid var(--line)}
+.mp-info .col{display:grid;grid-template-columns:1fr 1fr;gap:40px;padding:100px 40px 120px}
+.mp-info h2{font-size:36px;line-height:1.3;font-weight:400;align-self:end;padding-bottom:24px}
+.mp-info .txt{display:flex;flex-direction:column;gap:24px;font-weight:300;font-size:16px;line-height:1.6;color:var(--ink-2)}
+.mp-feat{border-top:1px solid var(--line)}
+.mp-feat .col{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px;padding:64px 64px 120px}
+.feat .img{position:relative;height:500px;border-radius:8px;overflow:hidden}
+.feat .img img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.feat:hover .img img{transform:scale(1.04)}
+.feat .img span{position:absolute;left:32px;top:32px;color:#fff;font-family:var(--f-en);font-weight:600;font-size:18px;letter-spacing:.04em}
+.feat h3{font-weight:500;font-size:24px;line-height:1.2;margin-top:24px}
+.feat p{font-weight:300;font-size:16px;line-height:1.6;color:var(--ink-2);margin-top:32px;padding-right:16px}
+.mp-nav{position:sticky;top:calc(80px + env(safe-area-inset-top,0px));z-index:40;background:var(--surface);border-bottom:1px solid var(--line)}
+.mp-nav .col{display:flex}
+.mp-nav button{flex:1 1 0;height:88px;display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--f-en);font-weight:500;font-size:18px;background:rgba(255,255,255,.6);border-bottom:2px solid transparent;transition:border-color .2s}
+.mp-nav button:first-child,.mp-nav button:last-child{flex:0 0 14.3%}
+.mp-nav button img{width:21px;height:22px}
+.mp-nav button > *{opacity:.5;transition:opacity .2s,filter .2s}
+.mp-nav button img{filter:grayscale(1)}
+.mp-nav button:hover > *{opacity:.8}
+.mp-nav button[aria-current="true"]{border-bottom-color:var(--red);background:var(--surface)}
+.mp-nav button[aria-current="true"] > *{opacity:1;filter:none}
+.product{border-bottom:1px solid var(--line);scroll-margin-top:168px;position:relative}
+.product:nth-of-type(even){background:var(--surface)}
+.product::before{content:"";position:absolute;left:0;right:0;top:318px;height:1px;background:var(--line)}
+.product .col{padding:100px 0 120px}
+.prod-head{display:grid;grid-template-columns:1fr 1fr;padding:0 40px;min-height:154px;margin-bottom:64px}
+.prod-head .logo img{height:84px;width:auto}
+.prod-head h2{font-weight:500;font-size:32px;line-height:1.4}
+.prod-head p{font-weight:300;font-size:16px;line-height:1.6;color:var(--ink-2);margin-top:12px}
+.ptabs{display:flex}
+.ptab{flex:1 1 0;height:88px;padding:32px 24px;font-weight:300;font-size:20px;color:var(--ink-3);text-align:center;position:relative;transition:color .2s,background .2s}
+.ptab:hover{color:var(--ink-2)}
+.ptab[aria-selected="true"]{background:var(--surface);color:var(--ink);font-weight:500}
+.product:nth-of-type(even) .ptab[aria-selected="true"]{background:var(--bg)}
+.ptab::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--grad);transform:scaleX(0);transition:transform .3s}
+.ptab[aria-selected="true"]::after{transform:scaleX(1)}
+.pshot{height:780px;background:#e5e5e5;position:relative;overflow:hidden}
+.pshot img{width:100%;height:100%;object-fit:cover}
+.pshot .ph{position:absolute;inset:0;display:grid;place-items:center;color:var(--ink-3);font-size:15px;letter-spacing:.02em}
+
+/* Deployment & Pricing / Support (shared) */
+.wide{max-width:1680px;margin:0 auto}
+.dp-sec{border-top:1px solid var(--line)}
+.dp-sec .wide{padding:112px 0 104px}
+.sec-row{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:46px}
+.h-xb{font-family:var(--f-en);font-weight:800;font-size:32px;line-height:1.2;color:#1a1a1e}
+.btn-line{height:65px;min-width:251px;padding:0 24px;border:1px solid #1a1a1e;font-size:18px;color:#1a1a1e;display:inline-flex;align-items:center;justify-content:center;transition:background .2s,color .2s}
+.btn-line:hover{background:#1a1a1e;color:#fff}
+.btn-pair{display:flex}
+.btn-pair .btn-line+.btn-line{border-left:0}
+.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:115px}
+.card3 .ph{height:279px;background:#f1f2f6;border-bottom:1px solid #e2e2e9}
+.card3 h3{margin-top:45px}
+.card3 .lead{font-weight:700;font-size:18px;line-height:1.5;color:#1a1a1e;margin-top:24px}
+.card3 .body{font-size:18px;line-height:1.5;color:#1a1a1e;margin-top:27px}
+.card3 .kw{font-size:18px;line-height:1.5;color:#1a1a1e;margin-top:24px}
+.card3 .more{display:inline-block;margin-top:32px;font-family:var(--f-en);font-weight:800;font-size:24px;color:#2a99e3}
+.card3 .more:hover{text-decoration:underline}
+.cmp-wrap{overflow-x:auto}
+.cmp{width:1254px;max-width:100%;border:2px solid #ececf0;border-radius:0 0 22px 22px;border-collapse:separate;border-spacing:0;overflow:hidden;background:#fff;color:#555559}
+.cmp th,.cmp td{text-align:left;padding:0 20px 0 39px;height:113px;font-size:20px;line-height:30px;border-bottom:2px solid #ececf0}
+.cmp tr:last-child td,.cmp tr:last-child th{border-bottom:0}
+.cmp thead th{height:104px;background:#f2f3f7;font-weight:700;font-size:24px;padding-bottom:14px}
+.cmp tbody th{background:#fafafc;font-weight:500;width:227px}
+.cmp tbody tr:hover td{background:#fbf8ff}
+
+/* Support FAQ (card style) */
+.sfaq{display:flex;flex-direction:column;gap:16px}
+.sfaq-item{background:#fafafc;border:1px solid #e2e2e9;border-radius:8px}
+.sfaq-q{width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:24px;font-family:var(--f-en);font-weight:700;font-size:16px;color:#1a1a1e;text-align:left}
+.sfaq-q i{font-style:normal;color:#76767d;transition:transform .3s}
+.sfaq-item.open .sfaq-q i{transform:rotate(180deg)}
+.sfaq-item .faq-a p{padding:0 24px 24px;font-size:14px;line-height:1.5;color:#76767d}
+.sfaq-item.open .faq-a{grid-template-rows:1fr}
+
+/* About */
+.ab-hero{padding:100px 140px 0;text-align:center}
+.ab-hero h1{font-weight:500;font-size:64px;line-height:1.2;color:#1a1a1e}
+.ab-intro{display:flex;justify-content:center;align-items:center;gap:116px;margin-top:60px}
+.ab-intro .mark{width:700px;height:700px;display:grid;place-items:center;flex:none}
+.ab-intro .mark img{width:560px;height:auto}
+.ab-intro .txt{width:734px;text-align:left;font-size:20px;line-height:1.5;color:#454545;display:flex;flex-direction:column;gap:30px}
+.ab-mods{display:flex;justify-content:space-between;padding:0 220px 100px}
+.ab-mod{display:flex;flex-direction:column;align-items:center;gap:32px;font-size:24px;line-height:1.4;color:#111;transition:transform .3s}
+.ab-mod img{width:140px;height:140px}
+.ab-mod:hover{transform:translateY(-6px)}
+.ab-values{padding:150px 140px 100px;text-align:center}
+.ab-values > h2{font-family:var(--f-en);font-weight:500;font-size:38px;line-height:1.2;color:#1a1a1e}
+.vals{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:60px;margin-top:60px}
+.val img{width:100%;height:238px;object-fit:cover;border:1px solid #e2e2e9;border-radius:16px;background:#fff}
+.val h3{font-weight:500;font-size:28px;line-height:1.2;color:#1a1a1e;margin-top:26px}
+.val h3 small{display:block;font-size:inherit;margin-top:34px}
+.val p{font-size:24px;line-height:1.2;color:#454545;margin-top:26px}
+
+/* Modals */
+.modal{position:fixed;inset:0;z-index:80;display:flex;align-items:flex-start;justify-content:center;padding:calc(40px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px));background:rgba(20,20,28,.55);overflow-y:auto;opacity:0;transition:opacity .25s}
+.modal.show{opacity:1}
+.modal[hidden]{display:none}
+.modal-panel{position:relative;width:100%;transform:translateY(16px);transition:transform .3s}
+.modal.show .modal-panel{transform:none}
+.modal-x{position:absolute;right:24px;top:24px;width:44px;height:44px;display:grid;place-items:center;border-radius:50%;font-family:var(--f-en);font-size:22px;color:#101a3a}
+.modal-x:hover{background:rgba(0,0,0,.06)}
+body.locked{overflow:hidden}
+/* license */
+.lic{max-width:1365px;background:#f1f2f6;padding:74px 127px 90px 76px}
+.lic h2{margin-bottom:56px}
+.lic-row{display:grid;grid-template-columns:373px minmax(0,1fr);gap:24px;padding-block:40px;border-top:1px solid #c9c9d2}
+.lic-row:first-of-type{border-top:0;padding-top:0}
+.lic-row .h-xb{padding-top:0}
+.lic-row p{font-size:18px;line-height:1.5;color:#1a1a1e;max-width:525px}
+.lic-row p + p{margin-top:24px}
+.lic-row .more{color:#2a99e3;font-weight:500;margin-left:4px}
+/* cases */
+.cases{max-width:1600px;background:linear-gradient(90deg,#fff,#f9f9fb);padding:48px 64px 72px;border-radius:24px}
+.cases-head{font-weight:700;font-size:26px;line-height:33.8px;color:#101a3a}
+.cases-tabs{display:flex;gap:16px;margin-top:40px}
+.ctab{flex:0 1 480px;height:104px;padding:0 32px;border:1px solid #e2e2e9;border-radius:22px;background:#fff;text-align:left;font-weight:700;font-size:30px;color:#646571;position:relative;transition:background .2s,color .2s}
+.ctab:hover{border-color:#c9c9d2}
+.ctab[aria-selected="true"]{background:#1b1b23;border-color:#1b1b23;color:#fff}
+.ctab[aria-selected="true"]::before{content:"✓  ";white-space:pre}
+.ctab[aria-selected="true"]::after{content:"";position:absolute;left:31px;right:31px;top:99px;height:4px;border-radius:2px;background:var(--grad)}
+.cases-hero{padding:24px 0;margin-top:40px}
+.cases-hero h2{font-weight:700;font-size:82px;line-height:1.12;color:#071232}
+.cases-hero p{font-weight:500;font-size:28px;line-height:42px;color:#565965;margin-top:24px;white-space:pre-line}
+.cases-list{display:flex;flex-direction:column;gap:32px;margin-top:40px}
+.case{background:#fff;border:1px solid #ececf1;border-radius:44px;padding:56px;display:grid;grid-template-columns:600px 1px minmax(0,1fr);gap:48px}
+.case .bar{background:#e6e7ec}
+.case .logo{height:49px;display:flex;align-items:center}
+.case .logo img{max-height:42px;width:auto}
+.case h3{font-weight:700;font-size:36px;line-height:52.2px;color:#091335;margin-top:20px;white-space:pre-line}
+.case .desc{font-size:24px;line-height:34.8px;color:#565965;margin-top:20px;white-space:pre-line}
+.case .period{font-size:22px;line-height:31.9px;color:#565965;margin-top:20px;white-space:pre-line}
+.case ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px}
+.case li{display:flex;gap:20px;font-size:22px;line-height:33px;color:#565965}
+.case li svg{flex:none;margin-top:2px}
+
+@media (max-width:1500px){
+  .cards3{gap:48px}
+  .ab-intro{gap:48px}.ab-intro .mark{width:520px;height:520px}.ab-intro .mark img{width:440px}
+  .ab-mods{padding-inline:80px}
+  .case{grid-template-columns:minmax(0,1fr) 1px minmax(0,1fr)}
+}
+@media (max-width:1100px){
+  .subvis{height:auto;padding-block:60px}.subvis .col{grid-template-columns:1fr}.subvis figure{height:360px}
+  .mp-feat .col,.cards3,.vals{grid-template-columns:1fr 1fr}
+  .prod-head,.mp-info .col{grid-template-columns:1fr;gap:24px}
+  .pshot{height:auto;aspect-ratio:1632/780}
+  .ab-intro{flex-direction:column}.ab-mods{flex-wrap:wrap;gap:32px;justify-content:center}
+  .case{grid-template-columns:1fr}.case .bar{height:1px}
+}
+@media (max-width:700px){
+  .mp-feat .col,.cards3,.vals{grid-template-columns:1fr}
+  .subvis h1,.ab-hero h1,.cases-hero h2{font-size:40px}
+  .ab-hero,.ab-values{padding-inline:0}
+  .mp-nav span,.ptab{font-size:14px}
+  .lic,.cases{padding:56px 20px}.lic-row{grid-template-columns:1fr}
+  .cases-tabs{flex-direction:column}.ctab{flex:none;height:72px;font-size:22px}
+  .sec-row{flex-wrap:wrap}.btn-line{min-width:0;flex:1}.btn-pair{width:100%}
+  .ab-intro .mark{width:100%;height:auto}.ab-intro .mark img{width:80%}.ab-intro .txt{width:auto;font-size:16px}
+  .ab-mods{padding-inline:16px}.cmp-wrap .cmp{max-width:none}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+</style>
+<style>html,body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+
+
+<header class="gnb" id="gnb">
+  <div class="gnb-left">
+    <a class="gnb-logo" href="#home" aria-label="AgenticWorks 홈"><img src="assets/logo.png" alt="AgenticWorks"></a>
+    <nav class="gnb-menu" aria-label="주요 메뉴">
+      <a href="#modules" data-route="modules">Modules</a>
+      <a href="#pricing" data-route="pricing">Deployment &amp; Pricing</a>
+      <a href="#support" data-route="support">Support</a>
+      <a href="#about" data-route="about">About</a>
+    </nav>
+  </div>
+  <div class="gnb-right">
+    <div class="lang" id="lang">
+      <button class="lang-btn" type="button" aria-haspopup="true" aria-expanded="false" id="lang-btn">Language
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M15 8H5L10 14L15 8Z" fill="#292929"/></svg>
+      </button>
+      <ul class="lang-list" role="menu" hidden id="lang-list">
+        <li><button role="menuitemradio" aria-checked="true" type="button">한국어</button></li>
+        <li><button role="menuitemradio" aria-checked="false" type="button">English</button></li>
+      </ul>
+    </div>
+    <a class="btn-grad" href="#" data-contact>Contact Us</a>
+  </div>
+</header>
+
+<main id="top">
+<div class="page" data-page="home">
+  <!-- HERO -->
+  <section class="hero" aria-roledescription="carousel" aria-label="메인 비주얼">
+    <div class="hero-top gutter">
+      <div class="hero-title">
+        <h1>Control Every Agent</h1>
+        <h1 aria-hidden="true">Govern Every Action</h1>
+        <h1 aria-hidden="true">Optimize Every Token</h1>
+        <div class="hero-bar" id="hero-bar"></div>
+      </div>
+      <p class="hero-desc">AgenticWorks는 AI 에이전트의 설계, 구축, 운영까지 전 주기(End-to-End)를<br>지원하는 엔터프라이즈 AI 오케스트레이션 플랫폼입니다.</p>
+    </div>
+    <div class="hero-media gutter">
+      <div class="col hero-img">
+        <img src="assets/hero-1.jpg" alt="사무실에서 노트북을 함께 보며 웃고 있는 동료들">
+        <img src="assets/hero-2.jpg" alt="사무실에서 하이파이브하는 동료들" aria-hidden="true">
+        <img src="assets/hero-3.jpg" alt="사무실에서 하이파이브하는 동료들" aria-hidden="true">
+        <div class="hero-dots" role="tablist" aria-label="비주얼 선택">
+          <button role="tab" aria-current="true" aria-label="1번 비주얼"></button>
+          <button role="tab" aria-label="2번 비주얼"></button>
+          <button role="tab" aria-label="3번 비주얼"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="problem gutter">
+    <div class="col framed">
+      <div class="sec-head">
+        <div class="eyebrow"><span>PROBLEM</span></div>
+        <div class="copy">
+          <h2 class="sec-title">늘어나는 AI 서비스, 복잡해지는 운영관리</h2>
+          <p class="sec-desc">각 조직이 서로 다른 LLM과 Agent를 도입하고 개별적으로 사내 시스템과 연결하면<br>AI 자체의 성능보다 연결·관리·운영의 복잡성이 더 큰 문제가 됩니다.</p>
+        </div>
+      </div>
+      <div class="challenge-grid">
+        <article class="challenge"><div class="t">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M10 22V14M10 22H4C3.46957 22 2.96086 21.7893 2.58579 21.4142C2.21071 21.0391 2 20.5304 2 20V14M10 22H16C16.5304 22 17.0391 21.7893 17.4142 21.4142C17.7893 21.0391 18 20.5304 18 20V15C18 14.7348 17.8946 14.4804 17.7071 14.2929C17.5196 14.1054 17.2652 14 17 14H10M10 14V7C10 6.73478 9.89464 6.48043 9.70711 6.29289C9.51957 6.10536 9.26522 6 9 6H4C3.46957 6 2.96086 6.21071 2.58579 6.58579C2.21071 6.96086 2 7.46957 2 8V14M10 14H2M15 2H21C21.5523 2 22 2.44772 22 3V9C22 9.55228 21.5523 10 21 10H15C14.4477 10 14 9.55228 14 9V3C14 2.44772 14.4477 2 15 2Z" stroke="#292929" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h3>분산된 자산</h3></div>
+          <p>부서별로 서로 다른 LLM과 에이전트를 도입하여<br>전사 자산과 노하우 파편화 발생</p>
+        </article>
+        <article class="challenge"><div class="t">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M10.94 5.274C12.0675 5.59886 13.0952 6.20191 13.9287 7.02772C14.7622 7.85353 15.3747 8.87561 15.71 10H17.5C18.225 10 18.9393 10.1752 19.5821 10.5107C20.2248 10.8461 20.777 11.332 21.1916 11.9267C21.6062 12.5215 21.8709 13.2077 21.9633 13.9268C22.0556 14.646 21.9729 15.3767 21.722 16.057M18.796 18.81C18.3756 18.9362 17.939 19.0002 17.5 19H9C7.43097 18.9997 5.90752 18.4723 4.67416 17.5025C3.4408 16.5326 2.56905 15.1764 2.19882 13.6517C1.8286 12.127 1.98137 10.5221 2.63261 9.09458C3.28385 7.66708 4.3958 6.49978 5.79 5.78M2 2L22 22" stroke="#292929" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h3>복잡한 연동</h3></div>
+          <p>ERP, CRM, 그룹웨어 등 기존 사내 레거시<br>시스템마다 개별적인 개발 공수 부담</p>
+        </article>
+        <article class="challenge"><div class="t">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 10.27L7 3.34M11 13.73L7 20.66M12 22V20M12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4M12 20C7.58172 20 4 16.4183 4 12M12 2V4M12 4C7.58172 4 4 7.58172 4 12M14 12H22M14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12ZM17 20.66L16 18.93M17 3.34L16 5.07M2 12H4M20.66 17L18.93 16M20.66 7L18.93 8M3.34 17L5.07 16M3.34 7L5.07 8" stroke="#292929" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h3>운영 난이도</h3></div>
+          <p>어떤 Agent가 어떤 모델과 데이터를 사용하는지<br>전사적으로 파악하고 관리하기 어려움</p>
+        </article>
+        <article class="challenge"><div class="t">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 22V16M16 19L19 16L22 19M21 12.536V5M21 5C21 6.65685 16.9706 8 12 8C7.02944 8 3 6.65685 3 5M21 5C21 3.34315 16.9706 2 12 2C7.02944 2 3 3.34315 3 5M3 12C3.00002 12.4639 3.32277 12.9215 3.94288 13.3367C4.563 13.752 5.46358 14.1137 6.57386 14.3934C7.68415 14.6731 8.97388 14.8631 10.3417 14.9486C11.7095 15.0341 13.1182 15.0126 14.457 14.886M3 5V19C2.99985 19.4311 3.27848 19.8572 3.8169 20.2492C4.35531 20.6412 5.14088 20.9899 6.12007 21.2716C7.09926 21.5532 8.24908 21.7612 9.4912 21.8814C10.7333 22.0016 12.0386 22.0311 13.318 21.968" stroke="#292929" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h3>비용 증가</h3></div>
+          <p>유사한 기능의 중복 개발 및 비정형 고비용 모델의<br>무분별한 쿼리 호출 현상</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTION -->
+  <section class="solution gutter">
+    <div class="col framed">
+      <div class="sec-head">
+        <div class="eyebrow"><span>SOLUTION</span></div>
+        <div class="copy">
+          <h2 class="sec-title">모든 AI를 연결하는 All-in-One 플랫폼</h2>
+          <p class="sec-desc">AgenticWorks는 AI 에이전트의 설계부터 구축, 운영, 관리, 배포까지 전 주기를 하나의 플랫폼에서 지원하며<br>다양한 AI 모델과 사내 시스템을 유연하게 연결하고 통합해 편리한 운영을 지원합니다.</p>
+        </div>
+      </div>
+      <div class="compare">
+        <figure><img src="assets/solution-without.jpg" alt="여러 업무 도구가 복잡하게 얽혀 있는 모습"><figcaption class="badge without">WITHOUT</figcaption></figure>
+        <figure><img src="assets/solution-with.jpg" alt="AgenticWorks를 중심으로 업무 도구가 정리되어 연결된 모습"><figcaption class="badge tobe">TOBE</figcaption></figure>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><h3>Connect Everything</h3><p>기업 시스템과 AI 모델, 데이터와 도구를 유연하게 연결합니다.</p></div>
+        <div class="step"><div class="step-num">2</div><h3>Orchestrate Process</h3><p>기획부터 개발, 배포, 운영까지 End-to-End 업무 흐름을 통합합니다.</p></div>
+        <div class="step"><div class="step-num">3</div><h3>Optimize Business</h3><p>데이터와 성과를 기반으로 비즈니스에 맞게 지속적으로 최적화합니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODULES -->
+  <section class="modules gutter" id="home-modules">
+    <div class="col framed">
+      <div class="mod-head">
+        <div class="left">
+          <div class="eyebrow mono"><span>MODULES</span></div>
+          <h2>원하는대로 유연하게<br>조합하는 모듈형 플랫폼</h2>
+        </div>
+        <div class="right">
+          <p>기업의 니즈와 상황에 맞추어 AI 오케스트레이션을 위한 핵심 모듈을 선택할 수 있으며<br>모델 선택부터 자동화, 개발 및 운영까지 최적화된 조합을 통해 안정적이고 신뢰도 높은 운영 환경을 제공합니다.</p>
+          <a class="link-arrow" href="#modules" data-route="modules">Modules <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 14H20L14.8571 9" stroke="currentColor" stroke-linejoin="bevel"/></svg></a>
+        </div>
+      </div>
+      <div class="tabs" role="tablist" aria-label="모듈" id="mod-tabs"></div>
+      <div class="mod-panel" role="tabpanel" id="mod-panel">
+        <div class="mod-copy swap">
+          <div>
+            <h3 id="mod-title"></h3>
+            <p class="sub" id="mod-sub"></p>
+            <ul id="mod-list"></ul>
+          </div>
+          <a class="link-arrow" href="#modules" id="mod-more">Learn More <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 14H20L14.8571 9" stroke="currentColor" stroke-linejoin="bevel"/></svg></a>
+        </div>
+        <div class="mod-fig swap"><img id="mod-img" src="assets/module-diagram.png" alt=""></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USE CASE -->
+  <section class="usecase gutter">
+    <div class="col framed">
+      <div class="sec-head">
+        <div class="eyebrow"><span>USE CASE</span></div>
+        <div class="copy">
+          <h2 class="sec-title">다양한 산업에서 쌓아온 AI 전환의 경험</h2>
+          <p class="sec-desc">제조·금융·유통·물류·공공 등 각 산업의 특성과 업무 프로세스에 최적화된 접근으로<br>단순 자동화부터 전문 업무 지원까지 다양한 비즈니스를 혁신합니다.</p>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>3</b><span>산업분야</span></div>
+        <div class="stat"><b>14</b><span>도입기관</span></div>
+        <div class="stat"><b>15</b><span>수행프로젝트</span></div>
+        <div class="stat"><b>58</b><span>서비스 구축항목</span></div>
+      </div>
+      <div class="industries" id="industries">
+        <div class="ind" role="button" tabindex="0" aria-expanded="true">
+          <img src="assets/usecase-finance.jpg" alt="">
+          <div class="shade closed" style="background:rgba(0,0,0,.7)"></div><div class="shade open"></div>
+          <span class="label">Finance</span>
+          <div class="body">
+            <div><h3>고객 응대부터 업무 지원까지<br>금융 AI의 새로운 표준</h3><p class="tags">고객상담 · 지식검색  · 업무지원 ·  문서처리</p></div>
+            <a class="link-arrow" href="#" data-case="finance">프로젝트 수행사례 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 14H20L14.8571 9" stroke="currentColor" stroke-linejoin="bevel"/></svg></a>
+          </div>
+          <div class="prog"><i></i></div>
+        </div>
+        <div class="ind" role="button" tabindex="0" aria-expanded="false">
+          <img src="assets/usecase-public.jpg" alt="">
+          <div class="shade closed" style="background:rgba(0,0,0,.7)"></div><div class="shade open"></div>
+          <span class="label">Public</span>
+          <div class="body">
+            <div><h3>행정 업무부터 대민 서비스까지<br>공공 분야의 AI 전환</h3><p class="tags">데이터 분석 · 지능형 검색 · 대민지원</p></div>
+            <a class="link-arrow" href="#" data-case="public">프로젝트 수행사례 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 14H20L14.8571 9" stroke="currentColor" stroke-linejoin="bevel"/></svg></a>
+          </div>
+          <div class="prog"><i></i></div>
+        </div>
+        <div class="ind" role="button" tabindex="0" aria-expanded="false">
+          <img src="assets/usecase-manufacturing.jpg" alt="">
+          <div class="shade closed" style="background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.8))"></div><div class="shade open"></div>
+          <span class="label">Manufacturing</span>
+          <div class="body">
+            <div><h3>전사 플랫폼부터 현장 업무까지<br>제조 혁신을 이끄는 AI</h3><p class="tags">AI 플랫폼 · 법무관리 · 품질관리 · ESG 대응</p></div>
+            <a class="link-arrow" href="#" data-case="manufacturing">프로젝트 수행사례 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 14H20L14.8571 9" stroke="currentColor" stroke-linejoin="bevel"/></svg></a>
+          </div>
+          <div class="prog"><i></i></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARTNER -->
+  <section class="partner gutter">
+    <div class="col framed">
+      <div class="sec-head">
+        <div class="eyebrow"><span>PARTNER</span></div>
+        <div class="copy">
+          <h2 class="sec-title">미래를 함께 설계하는 글로벌 AX 파트너</h2>
+          <p class="sec-desc">DAP GenAI Platform 등 LG CNS의 기술력 뿐만 아니라 Open AI, Palantir, Cohere 등<br>글로벌 기업들과의 전략적 파트너십으로 성공적인 AI 전환을 약속합니다.</p>
+        </div>
+      </div>
+      <div class="logos"><img src="assets/partners.png" alt="파트너: OpenAI, Palantir, Cohere, EXAONE, Celonis, Bright Pattern, Snowflake, TwelveLabs, Weights &amp; Biases, Enhans, Anthropic, Cognition" width="1552" height="200"></div>
+    </div>
+  </section>
+
+  <!-- LEADERSHIP -->
+  <section class="leader gutter" aria-roledescription="carousel" aria-label="리더십 뉴스">
+    <img class="swirl" src="assets/leadership-bg.png" alt="">
+    <div class="col framed">
+      <div class="leader-head">
+        <div class="eyebrow mono"><span>LEADERSHIP</span></div>
+        <div class="copy" style="display:flex;flex-direction:column;gap:12px">
+          <h2 class="sec-title">글로벌 AI 시장을 선도하는 기술 리더십</h2>
+          <p class="sec-desc">글로벌 시장에서 축적한 사업 성과와 성공 사례를 기반으로<br>세계가 인정하는 AI 기술 경쟁력과 리더십을 확장해 나가고 있습니다.</p>
+        </div>
+      </div>
+      <div class="slider" id="slider">
+        <div class="slide-text">
+          <h3 class="swap" id="sl-title"></h3>
+          <p class="desc swap" id="sl-desc"></p>
+          <p class="date swap" id="sl-date"></p>
+          <div class="slide-nav">
+            <button type="button" id="sl-prev" aria-label="이전 뉴스"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M32 23H12L18.4286 17" stroke="#F5F5F5" stroke-width="1.5" stroke-linejoin="bevel"/></svg></button>
+            <button type="button" id="sl-next" aria-label="다음 뉴스"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M12 23H32L25.5714 17" stroke="#F5F5F5" stroke-width="1.5" stroke-linejoin="bevel"/></svg></button>
+            <span class="slide-count" id="sl-count" aria-live="polite"></span>
+          </div>
+        </div>
+        <div class="slide-img" id="sl-imgs"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq gutter" id="home-faq">
+    <div class="col framed">
+      <div class="faq-head">
+        <div class="eyebrow mono"><span>FAQ</span></div>
+        <h2>LG CNS가 만들어가는<br>일하는 방식의 미래</h2>
+        <p>AgenticWorks에 대한 궁금증을 지금 바로 문의해보세요</p>
+      </div>
+      <div class="faq-list" id="faq-list"></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="inner">
+      <h2>Bring AI into Workplace</h2>
+      <a class="cta-btn" href="#" data-contact>Contact Us</a>
+    </div>
+  </section>
+</div>
+
+<!-- ================= MODULES ================= -->
+<div class="page" data-page="modules" hidden>
+  <section class="subvis gutter">
+    <img class="mp-swirl" src="assets/mod-swirl.png" alt="">
+    <div class="col">
+      <div class="copy">
+        <h1>All-in-One<br>AI Platform</h1>
+        <p class="lead">모델 선택부터 자동화, 개발 및 운영, 검색까지의 과정을 통해 고객의<br>다양한 비즈니스 과제를 해결하며 안정적이고 신뢰도 높은 운영 환경을 지원합니다.</p>
+      </div>
+      <figure><img src="assets/mod-visual.jpg" alt="라운지에서 노트북으로 대화하는 동료들"></figure>
+    </div>
+  </section>
+  <section class="mp-info gutter">
+    <div class="col framed">
+      <h2>7개의 모듈형 플랫폼<br>기업마다 다른 하나의 해답</h2>
+      <div class="txt">
+        <p>AgenticWorks는 국내 유일의 6종 모듈형 풀스택 플랫폼으로, AI 개발부터 데이터 활용, 모델 최적화, 통합 운영까지 기업의 AI 도입과 운영에 필요한 핵심 기능을 7개의 전문 모듈로 구성해 하나의 완결된 환경을 제공합니다.</p>
+        <p>기업의 현재 상황과 비즈니스 목적에 따라 가장 필요한 모듈부터 선택해 빠르게 시작하고, 필요한 기능을 자유롭게 조합하며, 향후 새로운 AI 모델과 Agent, 업무 영역이 추가되더라도 비즈니스의 변화와 성장에 맞춰 단계적으로 확장할 수 있습니다.</p>
+        <p>모든 기업에 동일한 시스템을 적용하는 대신 불필요한 구축과 초기 도입 부담은 줄이고 선택과 조합의 유연성은 높여, 기업마다 다른 IT 환경과 시스템에 최적화된 AI 솔루션을 제공합니다.</p>
+      </div>
+    </div>
+  </section>
+  <section class="mp-feat gutter">
+    <div class="col framed">
+      <article class="feat"><div class="img"><img src="assets/feat-composable.jpg" alt=""><span>COMPOSABLE</span></div>
+        <h3>필요한 모듈만 선택해<br>도입 부담 최소화</h3>
+        <p>모든 기능을 한 번에 구축할 필요 없이 기업의 업무 목적과 AX 성숙도에 따라 필요한 모듈부터 선택적으로 적용할 수 있습니다. 초기 구축 비용과 시간을 줄이고 빠르게 실제 업무에서 가치를 검증할 수 있습니다.</p></article>
+      <article class="feat"><div class="img"><img src="assets/feat-flexible.jpg" alt=""><span>FLEXIBLE</span></div>
+        <h3>기업의 상황에 맞는<br>유연한 대응</h3>
+        <p>7개 모듈을 독립적으로 활용하거나 서로 연결해 AI 모델 · Agent · 데이터 · 기존 시스템을 목적에 맞게 조합할 수 있습니다. 특정 기술이나 하나의 구조에 종속되지 않는 유연한 AI 환경을 구축합니다.</p></article>
+      <article class="feat"><div class="img"><img src="assets/feat-scalable.jpg" alt=""><span>SCALABLE</span></div>
+        <h3>비즈니스와 함께<br>지속적인 확장</h3>
+        <p>특정 AI 모델이나 기술에 고정되지 않고 비즈니스 환경과 기술 변화에 따라 필요한 모델과 기능을 선택하고 조합할 수 있는 구조를 제공해 빠른 확장이 가능하며 지속적으로 AI 환경을 고도화할 수 있습니다.</p></article>
+    </div>
+  </section>
+  <nav class="mp-nav gutter" aria-label="모듈 바로가기"><div class="col" id="mp-nav"></div></nav>
+  <div id="products"></div>
+</div>
+
+<!-- ================= DEPLOYMENT & PRICING ================= -->
+<div class="page" data-page="pricing" hidden>
+  <section class="subvis gutter">
+    <div class="col">
+      <div class="copy">
+        <h1>Enterprise<br>AI Orchestration</h1>
+        <p class="lead">기술은 달라도 하나로 연결되고, 역할은 달라도 함께 움직이며,<br>비즈니스가 확장될수록 가능성도 함께 확장됩니다.</p>
+      </div>
+      <figure><img src="assets/dp-visual.jpg" alt="회의실에서 함께 화면을 보는 팀"></figure>
+    </div>
+  </section>
+  <section class="dp-sec gutter">
+    <div class="wide">
+      <div class="sec-row"><h2 class="h-xb">도입방식</h2><button class="btn-line" type="button" data-open="license">라이선스 정책</button></div>
+      <div class="cards3">
+        <article class="card3"><div class="ph"></div><h3 class="h-xb">On-Premise</h3>
+          <p class="lead">기업 내부 환경에 직접 구축해 데이터와 시스템에 대한 높은 통제 수준을 확보하는 방식</p>
+          <p class="body">민감한 데이터와 핵심 시스템을 외부와 분리해 보호하고, 기업의 보안 정책과 내부 환경에 맞춰 AgenticWorks를 안정적으로 운영할 수 있습니다.</p>
+          <p class="kw">KEYWORD :  강력한 보안 · 통제 · 내부 구축</p></article>
+        <article class="card3"><div class="ph"></div><h3 class="h-xb">Cloud</h3>
+          <p class="lead">별도의 내부 인프라 구축 없이 Cloud 환경에서 빠르고 유연하게 도입하는 방식</p>
+          <p class="body">필요한 리소스를 유연하게 확장하고 AI 서비스를 신속하게 적용할 수 있어, 초기 구축 부담을 낮추면서 변화하는 업무 수요에 빠르게 대응할 수 있습니다.</p>
+          <p class="kw">KEYWORD :  신속한 도입 · 빠른 확장 · 운영 효율</p></article>
+        <article class="card3"><div class="ph"></div><h3 class="h-xb">Hybrid</h3>
+          <p class="lead">핵심 데이터는 내부에서 보호하고, Cloud의 확장성과 유연성을 함께 활용하는 방식</p>
+          <p class="body">보안이 중요한 데이터와 시스템은 내부 환경에서 관리하면서 필요한 AI 자원과 서비스는 Cloud로 확장해, 보안과 활용성의 균형을 확보할 수 있습니다.</p>
+          <p class="kw">KEYWORD :  보안과 활용의 균형 · 유연한 대응</p></article>
+      </div>
+    </div>
+  </section>
+  <section class="dp-sec gutter" style="border-bottom:1px solid var(--line)">
+    <div class="wide">
+      <div class="sec-row"><h2 class="h-xb">도입검토 세부기준</h2></div>
+      <div class="cmp-wrap">
+        <table class="cmp">
+          <thead><tr><th scope="col">구분</th><th scope="col">On-Premise</th><th scope="col">Cloud</th><th scope="col">Hybrid</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">데이터 위치</th><td>고객 데이터센터 내</td><td>고객 클라우드 계정 (VPC)</td><td>내부 + 클라우드 분산</td></tr>
+            <tr><th scope="row">망분리 · 에어갭</th><td>폐쇄망 · 에어갭 지원</td><td>VPC 격리 · 프라이빗 링크</td><td>폐쇄망 · 전용회선 연계</td></tr>
+            <tr><th scope="row">모델 선택</th><td>전 모델 선택 · 버전 고정</td><td>전 모델 + 클라우드 모델</td><td>내부 모델 + 클라우드 모델</td></tr>
+            <tr><th scope="row">인프라</th><td>고객 보유 GPU · NPU</td><td>고객 계정 자원</td><td>보유 자원 + 클라우드 확장</td></tr>
+            <tr><th scope="row">업데이트 주기</th><td>고객이 버전 고정</td><td>협의된 주기</td><td>영역별 개별 적용</td></tr>
+            <tr><th scope="row">과금 방식</th><td>라이선스 + 구축</td><td>구독 + 인프라 실비</td><td>라이선스 + 구독</td></tr>
+            <tr><th scope="row">지원 · SLA</th><td>전담 지원 계약</td><td>표준 SLA</td><td>전담 지원 + 표준 SLA</td></tr>
+            <tr><th scope="row">적합 고객</th><td>금융 · 공공 · 제조 보안망</td><td>데이터 반출 제약 기업</td><td>보안 + 확장성 동시 필요 기업</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= SUPPORT ================= -->
+<div class="page" data-page="support" hidden>
+  <section class="subvis gutter">
+    <div class="col">
+      <div class="copy">
+        <h1>Built for<br>Agentic Workflow</h1>
+        <p class="lead">기업마다 다른 업무 환경과 비즈니스 과제에 맞추어<br>실제 현장에서 바로 활용할 수 있도록 맞춤형 솔루션을 제공합니다.</p>
+      </div>
+      <figure><img src="assets/sup-visual.jpg" alt="유리 회의실에서 회의하는 팀"></figure>
+    </div>
+  </section>
+  <section class="dp-sec gutter">
+    <div class="wide">
+      <div class="sec-row"><h2 class="h-xb">도입검토자료</h2>
+        <div class="btn-pair"><a class="btn-line" href="#" data-soon>LG CNS 자료실</a><a class="btn-line" href="#" data-soon>릴리즈 노트</a></div></div>
+      <div class="cards3">
+        <article class="card3"><div class="ph"></div><h3 class="h-xb">AgenticWorks 소개서</h3>
+          <p class="body">기업에 최적화된 AI 오케스트레이션 플랫폼, 에이전틱웍스를 소개합니다.</p>
+          <a class="more" href="#" data-soon="소개서 파일이 연결되면 다운로드됩니다">소개서 다운로드 &gt;</a></article>
+        <article class="card3"><div class="ph"></div><h3 class="h-xb">AgenticWorks 브로슈어</h3>
+          <p class="body">유기적인 협업을 가능하게 하고 우리 기업에 맞는 ...</p>
+          <a class="more" href="#" data-soon="브로슈어 파일이 연결되면 다운로드됩니다">브로슈어 다운로드 &gt;</a></article>
+        <article class="card3"><div class="ph"></div><h3 class="h-xb">AgenticWorks 소개영상</h3>
+          <p class="body">기업에 최적화된 AI 오케스트레이션 플랫폼, 에이전틱웍스를 소개합니다.</p>
+          <a class="more" href="#" data-soon="영상이 연결되면 재생됩니다">영상 시청하기 &gt;</a></article>
+      </div>
+    </div>
+  </section>
+  <section class="dp-sec gutter">
+    <div class="wide">
+      <div class="sec-row"><h2 class="h-xb">자주 묻는 질문</h2></div>
+      <div class="sfaq" id="sfaq"></div>
+    </div>
+  </section>
+  <section class="cta">
+    <div class="inner">
+      <h2>Bring AI into Workplace</h2>
+      <a class="cta-btn" href="#" data-contact>Contact Us</a>
+    </div>
+  </section>
+</div>
+
+<!-- ================= ABOUT ================= -->
+<div class="page" data-page="about" hidden>
+  <section class="ab-hero gutter">
+    <h1>서로 다른 지능을 하나로.<br>새로운 가능성의 시작.</h1>
+    <div class="ab-intro">
+      <div class="mark"><img src="assets/about-brand.png" alt="AgenticWorks"></div>
+      <div class="txt">
+        <p>우리는 하나의 AI가 모든 것을 해결하는 미래보다,<br>서로 다른 지능과 사람이 함께 연결되어 움직이는 미래를 믿습니다.</p>
+        <p>서로 다른 주파수가 만나 하나의 아름다운 궤적을 그리는 리사주 곡선처럼,<br>AgenticWorks는 AI와 Agent, 데이터와 시스템을 연결하고 조율합니다.</p>
+        <p>필요에 따라 가장 적합한 기술을 선택하고,<br>목적에 따라 자유롭게 조합하며,<br>새로운 기술과 비즈니스의 변화에 맞춰 유연하게 확장합니다.</p>
+        <p>서로 다르기에 더 유연하게.<br>연결되기에 더 강력하게.</p>
+        <p>연결하고, 조율하고, 함께 확장하는 AI.<br>AgenticWorks는 서로 다른 지능을 더 큰 가능성으로 만들어갑니다.</p>
+      </div>
+    </div>
+  </section>
+  <section class="ab-mods gutter" aria-label="모듈">
+    <a class="ab-mod" href="#modules" data-goto="builder"><img src="assets/sym-builder.png" alt="">Builder</a>
+    <a class="ab-mod" href="#modules" data-goto="router"><img src="assets/sym-router.png" alt="">Router</a>
+    <a class="ab-mod" href="#modules" data-goto="refiner"><img src="assets/sym-refiner.png" alt="">Refiner</a>
+    <a class="ab-mod" href="#modules" data-goto="knowledge"><img src="assets/sym-knowledge.png" alt="">Knowledge</a>
+    <a class="ab-mod" href="#modules" data-goto="studio"><img src="assets/sym-studio.png" alt="">Studio</a>
+    <a class="ab-mod" href="#modules" data-goto="hub"><img src="assets/sym-hub.png" alt="">Hub</a>
+  </section>
+  <section class="ab-values gutter">
+    <h2>Core Values</h2>
+    <div class="vals">
+      <article class="val"><img src="assets/val-synergy.png" alt=""><h3>SYNERGY<small>사람과 기술이 함께 만드는 가치</small></h3><p>서로 다른 움직임이 하나의 곡선을 이루듯,<br>AI와 데이터, 시스템을 연결해 업무의 가치를 높입니다.</p></article>
+      <article class="val"><img src="assets/val-harmony.png" alt=""><h3>HARMONY<small>서로 다른 역량이 완성하는 조화</small></h3><p>서로 다른 리듬이 정교한 패턴을 만드는 것처럼,<br>에이전트의 역할과 실행을 조율해 협업의 완성도를 높입니다.</p></article>
+      <article class="val"><img src="assets/val-fluency.png" alt=""><h3>FLUENCY<small>변화를 선도하는 유기적인 흐름</small></h3><p>조건에 따라 새로운 형태를 그리는 곡선처럼, 기업의 업무와 환경에 맞춰 AI의 실행 흐름을 구성합니다.</p></article>
+      <article class="val"><img src="assets/val-resonance.png" alt=""><h3>RESONANCE<small>하나의 변화가 아닌 모두의 혁신</small></h3><p>다양한 조합이 새로운 패턴을 펼쳐내듯,<br>하나의 업무에서 시작한 AI 활용을 조직 전체로 넓혀갑니다.</p></article>
+    </div>
+  </section>
+</div>
+</main>
+
+<!-- ================= MODALS ================= -->
+<div class="modal" id="m-license" role="dialog" aria-modal="true" aria-labelledby="lic-title" hidden>
+  <div class="modal-panel lic">
+    <button class="modal-x" type="button" data-close aria-label="닫기">✕</button>
+    <h2 class="h-xb" id="lic-title">라이선스 정책</h2>
+    <div class="lic-row"><h3 class="h-xb">Perpetual</h3><div><p>라이선스를 일회성으로 구매해 계약된 범위 내에서 지속적으로 이용하는 방식</p><p>영구 라이선스 계약<br>유지보수 계약</p></div></div>
+    <div class="lic-row"><h3 class="h-xb">Subscription</h3><div><p>계약 기간 동안 이용 권한을 제공하고, 구독료를 정기적으로 지불하는 방식</p><p>정기 구독료</p></div></div>
+    <div class="lic-row"><h3 class="h-xb">Usage Based</h3><div><p>서비스 사용량에 따라 자체 표준 단위인 AWU(AgenticWorks Unit)로 과금되는 방식</p>
+      <p>On-Demand: 사용한 만큼 후불 지불 <a class="more" href="#" data-soon>더 보기</a><br>Credit: 선구매 후 사용량 차감 <a class="more" href="#" data-soon>더 보기</a><br>Package: 연간 Commit 계약을 통한 AWU 차등 제공 <a class="more" href="#" data-soon>더 보기</a></p></div></div>
+  </div>
+</div>
+<div class="modal" id="m-cases" role="dialog" aria-modal="true" aria-labelledby="cases-title" hidden>
+  <div class="modal-panel cases">
+    <button class="modal-x" type="button" data-close aria-label="닫기">✕</button>
+    <h2 class="cases-head" id="cases-title">프로젝트 수행사례</h2>
+    <div class="cases-tabs" role="tablist" id="cases-tabs">
+      <button class="ctab" role="tab" type="button" data-ind="finance">금융</button>
+      <button class="ctab" role="tab" type="button" data-ind="public">공공</button>
+      <button class="ctab" role="tab" type="button" data-ind="manufacturing">제조</button>
+    </div>
+    <div class="cases-hero"><h2 id="cases-name"></h2><p id="cases-sub"></p></div>
+    <div class="cases-list" id="cases-list"></div>
+  </div>
+</div>
+
+<footer class="footer gutter">
+  <div class="col framed">
+    <div class="brand"><img src="assets/logo-footer.png" alt="AgenticWorks"><span>LG CNS AX Foundry Platform</span></div>
+    <div class="meta"><p>서울시 강서구 마곡중앙8로 71 LG 사이언스파크 E13, E14</p><p>Copyright © LG CNS. All Rights Reserved.</p></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = s => document.querySelector(s);
+
+  /* toast for links whose destination page is not built yet */
+  const toast = $('#toast'); let tt;
+  function say(msg){ toast.textContent = msg; toast.classList.add('show'); clearTimeout(tt); tt = setTimeout(()=>toast.classList.remove('show'), 2200); }
+  document.querySelectorAll('[data-soon]').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault(); say(a.dataset.soon || '해당 기능은 다음 단계에서 연결됩니다');
+  }));
+  document.querySelectorAll('[data-contact]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); say('문의 팝업은 다음 단계에서 연결됩니다'); }));
+
+  /* GNB shadow on scroll */
+  const gnb = $('#gnb');
+  addEventListener('scroll', () => gnb.classList.toggle('scrolled', scrollY > 4), {passive:true});
+
+  /* Language dropdown */
+  const lang = $('#lang'), lb = $('#lang-btn'), ll = $('#lang-list');
+  function setLang(open){ ll.hidden = !open; lb.setAttribute('aria-expanded', open); open ? lang.setAttribute('data-open','') : lang.removeAttribute('data-open'); }
+  lb.addEventListener('click', e => { e.stopPropagation(); setLang(ll.hidden); });
+  ll.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    ll.querySelectorAll('button').forEach(x => x.setAttribute('aria-checked', x === b));
+    setLang(false); if (b.textContent === 'English') say('영문 페이지는 다음 단계에서 연결됩니다');
+  }));
+  document.addEventListener('click', () => setLang(false));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') setLang(false); });
+
+  /* HERO rotation */
+  const titles = document.querySelectorAll('.hero-title h1');
+  const himgs = document.querySelectorAll('.hero-img img');
+  const dots = document.querySelectorAll('.hero-dots button');
+  const bar = $('#hero-bar');
+  let hi = 0, ht;
+  function hero(i){
+    hi = (i + titles.length) % titles.length;
+    titles.forEach((t,k)=> t.setAttribute('aria-hidden', k !== hi));
+    himgs.forEach((t,k)=> t.setAttribute('aria-hidden', k !== hi));
+    dots.forEach((t,k)=> t.setAttribute('aria-current', k === hi));
+    if (!reduce){ bar.classList.remove('run'); void bar.offsetWidth; bar.classList.add('run'); }
+    clearTimeout(ht); if (!reduce) ht = setTimeout(()=>hero(hi+1), 6000);
+  }
+  dots.forEach((d,k)=> d.addEventListener('click', ()=>hero(k)));
+  hero(0);
+
+  /* MODULES tabs */
+  const MODS = [
+    {name:'Builder', icon:'assets/ic-builder.png', title:'개발 도구와 테스트·배포 과정이<br>서로 분산되어 있나요?', sub:'프롬프트와 코드 기반 도구를 한곳에 모아 에이전트를 개발하고, 테스트하고, 배포합니다.',
+     list:['코드/프롬프트 기반 개발 및 테스트 환경 제공','Custom ADK (Agent Development Kit) 제공','휴먼 피드백을 통한 서비스 평가'], img:'assets/module-diagram.png'},
+    {name:'Studio', icon:'assets/ic-studio.png', title:'업무 담당자도 AI 서비스 설계에<br>참여해야 하나요?', sub:'No/Low-Code 환경에서 에이전트와 도구를 연결하고 워크플로우를 구성합니다.',
+     list:['다양한 LLM 모델 연동 및 제어','시나리오 빌더 기반 실시간 디버깅','One-Click 에이전트 퍼블리싱'], img:'assets/module-diagram.png'},
+    {name:'Hub', icon:'assets/ic-hub.png', title:'여러 에이전트의 운영 상태를<br>일일이 살펴봐야 하나요?', sub:'모든 에이전트와 연결 도구를 중앙에서 관리하고 실행과 상호작용을 모니터링합니다.',
+     list:['MCP, Agent 등록 및 연결 관리','MCP, Agent 서버 실행 관리 및 모니터링','Agent 성능 및 상호작용 추적 및 분석'], img:'assets/module-diagram.png'},
+    {name:'Router', icon:'assets/ic-router.png', title:'업무마다 매번 어떤 모델을<br>써야 할지 고민되나요?', sub:'업무별 성능과 비용을 고려해 모델을 선택하고 전환하는 라우팅을 지원합니다.',
+     list:['최적의 Router 구성을 위한 통합 대시보드 및 시뮬레이션 제공','비용 혹은 성능 최적화 목표의 Router','로그 데이터 기반의 Customization'], img:'assets/module-diagram.png'},
+    {name:'Refiner', icon:'assets/ic-refiner.png', title:'우리 기업과 업무 특성에 맞는<br>맥락을 담을 수 있나요?', sub:'데이터 생성부터 평가, 파인튜닝까지. 기업의 도메인에 맞게 AI 모델을 다듬는 환경을 제공합니다.',
+     list:['No-code 기반 비즈니스 특화 AI 학습·파인튜닝','대규모 모델을 경량화하는 디스틸레이션 기능','다양한 전문 엑스퍼트 모델의 지식 결합(머지) 기능제공','모델 평가 및 리더보드 운영 & Synthetic Data 생성 도구','기업 및 산업별 요구에 맞춘 Agentic AI 성능 최적 구현'], img:'assets/module-diagram.png'},
+    {name:'Knowledge', icon:'assets/ic-knowledge.png', title:'사내 문서와 지식이<br>여러 곳에 흩어져 있나요?', sub:'기업 내부의 비정형 정보를 정리하고, 에이전트가 활용할 수 있는 지식 파이프라인으로 연결합니다.',
+     list:['문서 Lineage 관리 및 Tracing','단계별 문서 전처리 (파싱, 청킹, 메타데이터 추출)','자동화된 지식 파이프라인 구축','키워드 검색, 벡터 검색, 하이브리드 검색 지원','다국어 검색을 위한 언어 정보 관리','지식 파이프라인의 MCP로 생성 및 등록'], img:'assets/module-knowledge.jpg'}
+  ];
+  const tabs = $('#mod-tabs'), panel = $('#mod-panel');
+  MODS.forEach((m,i)=>{
+    const b = document.createElement('button');
+    b.className = 'tab'; b.type = 'button'; b.setAttribute('role','tab'); b.id = 'tab-'+m.name.toLowerCase();
+    b.setAttribute('aria-controls','mod-panel');
+    b.innerHTML = `<img src="${m.icon}" alt=""><span>${m.name}</span>`;
+    b.addEventListener('click', ()=>mod(i, true));
+    b.addEventListener('keydown', e=>{
+      if (e.key==='ArrowRight'||e.key==='ArrowLeft'){ const n=(i+(e.key==='ArrowRight'?1:-1)+MODS.length)%MODS.length; mod(n,true); tabs.children[n].focus(); }
+    });
+    tabs.appendChild(b);
+  });
+  let mi = -1;
+  function fill(m){
+    $('#mod-title').innerHTML = m.title; $('#mod-sub').textContent = m.sub;
+    $('#mod-list').innerHTML = m.list.map(t=>`<li>- ${t.replace(/&/g,'&amp;')}</li>`).join('');
+    const img = $('#mod-img'); img.src = m.img; img.alt = m.name + ' 모듈 구성도';
+  }
+  function mod(i, animate){
+    if (i === mi) return; mi = i;
+    [...tabs.children].forEach((t,k)=>{ t.setAttribute('aria-selected', k===i); t.tabIndex = k===i ? 0 : -1; });
+    panel.setAttribute('aria-labelledby', tabs.children[i].id);
+    if (!animate || reduce){ fill(MODS[i]); return; }
+    panel.classList.add('fading');
+    setTimeout(()=>{ fill(MODS[i]); panel.classList.remove('fading'); }, 220);
+  }
+  MODS.forEach(m=>{ const p = new Image(); p.src = m.img; });
+  mod(0, false);
+
+  /* USE CASE accordion (auto-advance, pauses on hover) */
+  const inds = [...document.querySelectorAll('.ind')];
+  let ui = 0, ut, paused = false;
+  function uc(i){
+    ui = i;
+    inds.forEach((el,k)=>{
+      el.setAttribute('aria-expanded', k===i);
+      const bar = el.querySelector('.prog i'); bar.classList.remove('run');
+      if (k===i && !reduce){ void bar.offsetWidth; bar.classList.add('run'); }
+      el.querySelector('.body a').tabIndex = k===i ? 0 : -1;
+    });
+    schedule();
+  }
+  function schedule(){ clearTimeout(ut); if (!reduce && !paused) ut = setTimeout(()=>uc((ui+1)%inds.length), 7000); }
+  inds.forEach((el,k)=>{
+    el.addEventListener('click', e=>{ if (e.target.closest('a')) return; if (k!==ui) uc(k); });
+    el.addEventListener('keydown', e=>{ if ((e.key==='Enter'||e.key===' ') && !e.target.closest('a')){ e.preventDefault(); uc(k);} });
+  });
+  const indWrap = $('#industries');
+  indWrap.addEventListener('mouseenter', ()=>{ paused = true; clearTimeout(ut); inds[ui].querySelector('.prog i').style.animationPlayState='paused'; });
+  indWrap.addEventListener('mouseleave', ()=>{ paused = false; uc(ui); inds[ui].querySelector('.prog i').style.animationPlayState=''; });
+  uc(0);
+
+  /* LEADERSHIP slider */
+  const NEWS = [
+    {t:'LG CNS, 美 팔란티어와 ‘맞손’<br>기업용 AI 플랫폼 시장 공략', d:'팔란티어의 데이터 통합 플랫폼 ‘파운드리’와 AI 플랫폼 ‘AIP’를 기반으로 기업의 실시간 데이터 분석과 의사결정을 지원하며, 전담조직 FDE를 통해 제조·에너지·물류 등 다양한 산업의 AX 혁신을 가속화합니다.', date:'2026.03.12', img:'assets/news-palantir.jpg', alt:'LG CNS와 팔란티어 관계자 악수'},
+    {t:'LG CNS, OpenAI 리셀러 파트너 활동 시작 ··· ‘기업용 ChatGPT’ 국내 확산 시동', d:'오픈AI와의 전략적 협력을 통해 ChatGPT 엔터프라이즈 도입부터 운영까지 통합 지원하고, 고객 맞춤형 AI 에이전트 개발과 기업 업무 환경에 최적화된 AI 서비스 제공으로 AX 혁신과 업무 생산성 향상을 추진합니다.', date:'2026.03.12', img:'assets/news-openai.jpg', alt:'LG 사이언스파크 건물'},
+    {t:'LG CNS, 글로벌 AI 유니콘 기업과 ‘에이전틱 AI’ 서비스 개발', d:'코히어의 기업용 AI 플랫폼 ‘노스(North)’를 기반으로 보안성과 업무 효율성을 갖춘 맞춤형 에이전틱 AI 서비스를 공동 개발하며, 한국어·금융 특화 AI 모델을 통해 금융·제조 등 다양한 산업의 AX 혁신을 지원합니다.', date:'2026.03.12', img:'assets/news-cohere.jpg', alt:'LG CNS와 코히어 전략적 파트너십 체결식'},
+    {t:'LG CNS, 앤트로픽 클로드 ‘프리퍼드’ 파트너 선정…“전 세계 50곳뿐”', d:'앤트로픽의 ‘클로드 엔터프라이즈’를 기반으로 기업의 AI 도입과 활용을 지원하고, 개발·협업 등 다양한 업무 영역에 AI 기술을 적용해 업무 생산성을 높이며, 기업 환경에 최적화된 AX 서비스와 AI 활용 역량을 강화합니다.', date:'2026.03.12', img:'assets/news-anthropic.jpg', alt:'LG CNS 사옥'},
+    {t:'LG CNS, ‘사전제작 모듈형 데이터센터’로 AI 팩토리 시장 공략', d:'엔비디아의 차세대 GPU 기술을 기반으로 AI 인프라 구축부터 학습·추론·운영까지 통합 지원하는 AI 팩토리 풀스택 서비스를 제공하며, GPU 클라우드와 모듈형 데이터센터를 통해 기업의 AI 인프라 경쟁력과 AX 전환을 지원합니다.', date:'2026.03.12', img:'assets/news-nvidia.jpg', alt:'전시장에서 AI 데이터센터 모형을 설명하는 모습'}
+  ];
+  const slider = $('#slider'), simgs = $('#sl-imgs');
+  NEWS.forEach((n,k)=>{ const im = document.createElement('img'); im.src = n.img; im.alt = n.alt; if (k) im.setAttribute('aria-hidden','true'); simgs.appendChild(im); });
+  let si = 0;
+  function sfill(){ const n = NEWS[si]; $('#sl-title').innerHTML = n.t; $('#sl-desc').textContent = n.d; $('#sl-date').textContent = n.date;
+    $('#sl-count').textContent = `${si+1} / ${NEWS.length}`;
+    [...simgs.children].forEach((im,k)=> im.setAttribute('aria-hidden', k!==si)); }
+  function slide(d){
+    si = (si + d + NEWS.length) % NEWS.length;
+    if (reduce){ sfill(); return; }
+    slider.classList.add('fading'); [...simgs.children].forEach((im,k)=> im.setAttribute('aria-hidden', k!==si));
+    setTimeout(()=>{ sfill(); slider.classList.remove('fading'); }, 260);
+  }
+  $('#sl-prev').addEventListener('click', ()=>slide(-1));
+  $('#sl-next').addEventListener('click', ()=>slide(1));
+  sfill();
+
+  /* FAQ accordion */
+  const FAQ = [
+    ['여러 AI 모델과 시스템을 단일 플랫폼 내에서 중앙 집중식으로 관리할 수 있을까요?','예. LG CNS의 AgenticWorks라는 통합 플랫폼에서는 MCP(모델 컨텍스트 프로토콜)를 통해 여러 모델과 시스템을 중앙에서 제어 및 모니터링할 수 있으며, 필요에 따라 자동 라우팅 및 스위칭 기능도 제공합니다.'],
+    ['기획부터 배포 및 운영까지 완벽하게 통합된 프로세스를 제공하시나요?','예. AgenticWorks는 AI Agent의 기획·설계부터 개발·테스트, 배포, 모니터링·운영까지 전 과정을 지원합니다. 필요한 모듈을 기업 데이터와 업무 절차에 맞게 조합하여 단계적으로 도입할 수 있습니다.'],
+    ['외부 LLM을 사용할 때 회사 내부 데이터는 안전한가요?','고객사의 보안 정책에 맞춰 안전한 사용 환경을 구성할 수 있습니다. 보안 필터링, 사용자·문서 단위 권한 관리, 운영 모니터링을 적용하고, 민감 데이터는 온프레미스 환경에서 처리하도록 구성할 수 있습니다. 다만 외부 LLM의 데이터 저장·학습 정책과 실제 연계 방식은 도입 시 별도로 확인해야 합니다.'],
+    ['클라우드 환경과 온프레미스 환경 모두를 지원합니까?','예. AgenticWorks는 온프레미스와 클라우드 환경을 모두 지원하며, 고객사의 보안·규제·인프라 요건에 맞춘 하이브리드 구성도 가능합니다.']
+  ];
+  const fl = $('#faq-list');
+  FAQ.forEach(([q,a],k)=>{
+    const item = document.createElement('div'); item.className = 'faq-item' + (k===0?' open':'');
+    item.innerHTML = `<button class="faq-q" type="button" id="faq-q${k}" aria-expanded="${k===0}" aria-controls="faq-a${k}"><span>${q}</span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M18 9.5H6L12 16.5L18 9.5Z" fill="#292929"/></svg></button>
+      <div class="faq-a" id="faq-a${k}" role="region" aria-labelledby="faq-q${k}"><div><p>${a}</p></div></div>`;
+    fl.appendChild(item);
+  });
+  fl.addEventListener('click', e=>{
+    const btn = e.target.closest('.faq-q'); if (!btn) return;
+    const item = btn.parentElement, open = !item.classList.contains('open');
+    fl.querySelectorAll('.faq-item').forEach(it=>{ it.classList.remove('open'); it.querySelector('.faq-q').setAttribute('aria-expanded','false'); });
+    if (open){ item.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+  });
+
+  /* ================= MODULES PAGE ================= */
+  const PRODUCTS = [
+    {id:'builder', name:'Builder', icon:'assets/ic-builder.png', logo:'assets/logo-builder.png',
+     title:'Prompt 관리부터 Agent 개발 / 배포까지<br>아우르는 통합 개발 · 운영 환경',
+     desc:'AI Agent와 다양한 도구를 개발 · 테스트 · 배포할 수 있는 플랫폼으로<br>Prompt 관리, Workflow 구성, Agent 및 MCP Tool 저장 · 배포 등 모든 개발 주기를 유연하게 지원',
+     tabs:['개발 환경 생성','Agent 개발','평가 / 검증','테스트 / 배포'], shot:'assets/prod-builder-shot.jpg'},
+    {id:'router', name:'Router', icon:'assets/ic-router.png', logo:'assets/logo-router.png',
+     title:'성능과 비용을 고려한 최적의 AI 모델을<br>자동 선택 · 전환하는 Routing Engine',
+     desc:'속도, 품질, 비용 등 다양한 조건을 고려해 다수의 AI 모델 중 최적의 모델을 자동으로 선택·전환하며,<br>지속적인 데이터 학습과 튜닝으로 AI 서비스의 효율성과 성능을 극대화',
+     tabs:['정책 설정','동적 모델 라우팅','모델 실행 / 폴 백','품질 검증']},
+    {id:'refiner', name:'Refiner', icon:'assets/ic-refiner.png', logo:'assets/logo-refiner.png',
+     title:'데이터 생성부터 모델 평가까지<br>AI 모델 최적화를 위한 올인원 환경',
+     desc:'SOTA 수준의 한국어 특화 모델 Ziphyun 제공 기업용 Agentic AI 최적화에 특화된<br>데이터 생성 · 평가 · 파인튜닝 기술 지원 온프레미스 및 클라우드 환경을 모두 지원하는 Composable 솔루션',
+     tabs:['데이터셋 등록','LLM 파인 튜닝','학습 데이터 확인','모델 비교 평가']},
+    {id:'knowledge', name:'Knowledge', icon:'assets/ic-knowledge.png', logo:'assets/logo-knowledge.png',
+     title:'기업 내부 정보를 자산화하여<br>MCP로 활용가능한 지식 저장소',
+     desc:'기업의 분산된 정보를 하나의 지식 자산으로 통합하고, 온톨로지 기반의 정확한 검색과 답변을 구현해<br>이를 MCP 서버를 통해 다양한 업무와 서비스로 확장',
+     tabs:['정책 설정','동적 모델 라우팅','모델 실행 / 폴 백','품질 검증']},
+    {id:'studio', name:'Studio', icon:'assets/ic-studio.png', logo:'assets/logo-studio.png',
+     title:'No/Low-Code 기반의<br>AI Agent 오케스트레이션 플랫폼',
+     desc:'누구나 쉽게 사용할 수 있는 개발 환경을 기반으로 사용자 권한 설정부터 외부 도구 연결,<br>Agent·워크플로우 구성, 실시간 모니터링까지 한 곳에서 관리',
+     tabs:['대화형 인터페이스','Agent 개발','Workflow 생성','MCP 연동']},
+    {id:'hub', name:'Hub', icon:'assets/ic-hub.png', logo:'assets/logo-hub.png',
+     title:'AI Agent와 시스템을 중앙에서<br>제어 · 모니터링하는 통합 인텔리전스 허브',
+     desc:'다양한 Agent와 외부 도구를 유연하게 연결하고 한곳에서 통합 관리하며,<br>모니터링과 보안·접근 제어를 통해 안정적인 운영을 지원',
+     tabs:['Dynamic MCP Routing','MCP Repository','Agent Repository']}
+  ];
+  const mpNav = $('#mp-nav'), prodWrap = $('#products');
+  PRODUCTS.forEach((p,i)=>{
+    const b = document.createElement('button'); b.type='button'; b.dataset.goto = p.id;
+    b.innerHTML = `<img src="${p.icon}" alt=""><span>${p.name}</span>`; mpNav.appendChild(b);
+    const s = document.createElement('section'); s.className = 'product gutter'; s.id = 'prod-'+p.id;
+    s.innerHTML = `<div class="col framed">
+      <div class="prod-head"><div class="logo"><img src="${p.logo}" alt="AgenticWorks ${p.name}"></div>
+        <div><h2>${p.title}</h2><p>${p.desc}</p></div></div>
+      <div class="ptabs" role="tablist" aria-label="${p.name} 기능">${p.tabs.map((t,k)=>`<button class="ptab" role="tab" type="button" aria-selected="${k===0}">${t}</button>`).join('')}</div>
+      <div class="pshot" role="tabpanel">${p.shot ? `<img src="${p.shot}" alt="${p.name} 화면">` : ''}<div class="ph"${p.shot?' hidden':''}>${p.tabs[0]} · 화면 이미지 준비 중</div></div>
+    </div>`;
+    prodWrap.appendChild(s);
+    const tabsEl = s.querySelectorAll('.ptab'), ph = s.querySelector('.ph'), shot = s.querySelector('.pshot img');
+    tabsEl.forEach((t,k)=> t.addEventListener('click', ()=>{
+      tabsEl.forEach(x=> x.setAttribute('aria-selected', x===t));
+      if (shot){ shot.hidden = k!==0; ph.hidden = k===0; }
+      ph.textContent = `${p.tabs[k]} · 화면 이미지 준비 중`;
+    }));
+  });
+  function gotoProduct(id, smooth){
+    const el = document.getElementById('prod-'+id); if (!el) return;
+    const y = el.getBoundingClientRect().top + scrollY - 168;
+    scrollTo({top:y, behavior: smooth && !reduce ? 'smooth' : 'auto'});
+  }
+  mpNav.addEventListener('click', e=>{ const b = e.target.closest('button'); if (b) gotoProduct(b.dataset.goto, true); });
+  function spy(){
+    if (current !== 'modules') return;
+    let active = null;
+    PRODUCTS.forEach(p=>{ const r = document.getElementById('prod-'+p.id).getBoundingClientRect(); if (r.top <= 240) active = p.id; });
+    [...mpNav.children].forEach(b=> b.setAttribute('aria-current', b.dataset.goto === active));
+  }
+  addEventListener('scroll', spy, {passive:true});
+
+  /* ================= SUPPORT FAQ ================= */
+  const sf = $('#sfaq');
+  FAQ.forEach(([q,a],k)=>{
+    const it = document.createElement('div'); it.className = 'sfaq-item' + (k===0?' open':'');
+    it.innerHTML = `<button class="sfaq-q" type="button" aria-expanded="${k===0}" aria-controls="sfaq-a${k}"><span>${q}</span><i aria-hidden="true">↓</i></button>
+      <div class="faq-a" id="sfaq-a${k}"><div><p>${a}</p></div></div>`;
+    sf.appendChild(it);
+  });
+  sf.addEventListener('click', e=>{
+    const btn = e.target.closest('.sfaq-q'); if (!btn) return;
+    const it = btn.parentElement, open = !it.classList.contains('open');
+    sf.querySelectorAll('.sfaq-item').forEach(x=>{ x.classList.remove('open'); x.querySelector('.sfaq-q').setAttribute('aria-expanded','false'); });
+    if (open){ it.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+  });
+
+  /* ================= ROUTER ================= */
+  const PAGES = ['home','modules','pricing','support','about'];
+  let current = null, pendingGoto = null;
+  function route(){
+    const h = location.hash.replace('#','');
+    const page = PAGES.includes(h) ? h : 'home';
+    if (page === current) return;
+    current = page;
+    document.querySelectorAll('.page').forEach(p=> p.hidden = p.dataset.page !== page);
+    document.querySelectorAll('.gnb-menu a').forEach(a=> a.dataset.route === page ? a.setAttribute('aria-current','page') : a.removeAttribute('aria-current'));
+    document.title = 'AgenticWorks Main';
+    if (pendingGoto){ const id = pendingGoto; pendingGoto = null; requestAnimationFrame(()=>gotoProduct(id,false)); }
+    else scrollTo(0,0);
+    spy();
+  }
+  addEventListener('hashchange', route);
+  document.addEventListener('click', e=>{
+    const g = e.target.closest('[data-goto]');
+    if (g && g.tagName === 'A'){ pendingGoto = g.dataset.goto; if (current === 'modules'){ e.preventDefault(); gotoProduct(pendingGoto,true); pendingGoto=null; } }
+  });
+  $('#mod-more').addEventListener('click', ()=>{
+    const sel = tabs.querySelector('[aria-selected="true"] span');
+    pendingGoto = sel ? sel.textContent.toLowerCase() : null;
+  });
+  route();
+
+  /* ================= MODALS ================= */
+  let lastFocus = null;
+  function openModal(id){
+    const m = document.getElementById(id); lastFocus = document.activeElement;
+    m.hidden = false; document.body.classList.add('locked');
+    requestAnimationFrame(()=> m.classList.add('show'));
+    m.querySelector('[data-close]').focus(); m.scrollTop = 0;
+  }
+  function closeModal(m){
+    m.classList.remove('show'); document.body.classList.remove('locked');
+    setTimeout(()=>{ m.hidden = true; }, reduce ? 0 : 250);
+    if (lastFocus) lastFocus.focus();
+  }
+  document.querySelectorAll('.modal').forEach(m=>{
+    m.addEventListener('click', e=>{ if (e.target === m || e.target.closest('[data-close]')) closeModal(m); });
+  });
+  document.addEventListener('keydown', e=>{ if (e.key === 'Escape'){ const m = document.querySelector('.modal.show'); if (m) closeModal(m); } });
+  document.querySelectorAll('[data-open="license"]').forEach(b=> b.addEventListener('click', ()=>openModal('m-license')));
+
+  /* project cases */
+  const CHECK = '<svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true"><circle cx="14" cy="14" r="14" fill="#F2F2F5"/><path d="M8.5 14L12 17.5L19.5 9.5" stroke="url(#ck)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="ck" x1="8.5" y1="13.5" x2="19.5" y2="13.5" gradientUnits="userSpaceOnUse"><stop stop-color="#FF312E"/><stop offset=".5" stop-color="#F02EF0"/><stop offset="1" stop-color="#971EFF"/></linearGradient></defs></svg>';
+  const L = n => `assets/clients/${n}.png`;
+  const CASES = {
+    finance:{name:'FINANCE', sub:'고객의 금융 경험을 혁신하는\n다양한 금융 브랜드의 AI Agent 도입 사례', list:[
+      {logo:L('shinhancard'), alt:'신한카드', t:'신한카드 AI Agent 서비스 개발', d:'상품 안내·추천부터 거래·정산 상담까지,\n고객 응대와 내부 업무를 함께 지원합니다.', p:'2026.01 ~ 2026.07',
+       s:['SOL Pay 대출 상품 코디네이터 FAQ Agent','슈퍼 SOL/SOL Pay 카드 제휴 서비스 안내 Agent','슈퍼 SOL/SOL Pay 이벤트/쿠폰 안내 Agent','슈퍼 SOL/SOL Pay 생활편의 업무 처리 Agent','슈퍼 SOL/SOL Pay 거래내역 상담 및 발송 업무 처리 Agent','채권 추심 안내 Agent','법인 심사 레포트 Agent','정산 상담 안내 Agent','슈퍼 SOL/SOL Pay O2O 포인트몰 상품 추천 Agent','상품 안내장 분석/비교 레포트 Agent','마이카 챗봇 검색/안내 Agent']},
+      {logo:L('woori'), alt:'우리은행', t:'GenAI 활용을 위한 환경 구축과\n생성형 AI 서비스 구현', d:'청약 상담과 퇴직연금 자산관리,\n이미지 생성까지 금융 AI 서비스를 제공합니다.', p:'2025.04 ~ 2025.12',
+       s:['AI청약상담원(AI 기반 청약상담, 예상 청약가점·순위 계산, 맞춤형 청약 공고 추천 등)','로보어드바이저(퇴직연금 수익률 제고를 위한 혁신 금융서비스)','W-Sketch (캐릭터, 사물, 일러스트 등 이미지 생성 AI 서비스)']},
+      {logo:L('nh'), alt:'NH농협은행', t:'미래세대 유치 및 금융거래 활성화를 위한 생성형 AI 플랫폼 도입 사업', d:'지식검색과 맞춤형 영업 제안을 통해\n고객 접점과 임직원 업무를 지원합니다.', p:'2025.01 ~ 2025.11',
+       s:['문서기반 지식정보 검색 Assistant','맞춤형 세일즈 피칭 워드 생성 AI','정책자금지원 및 기업고객 매칭 Agent','AI 업무 비서 (자료 핵심 요약, 업로드한 문서 기반 질의 응답, 외국어 번역 등)']},
+      {logo:L('shinhancard'), alt:'신한카드', t:'신한카드 GenAI 플랫폼 구축', d:'사내 지식검색과 상담·마케팅 지원으로\n임직원의 정보 활용과 업무 수행을 돕습니다.', p:'2024.09 ~ 2025.02',
+       s:['임직원 업무 Assistant (카드 서비스 등을 포함한 사내 매뉴얼 데이터를 실시간으로 검색/답변 제공)','상담원 지식 Q&A 서비스 고도화','마케팅 AI (문구 작성, 준법 심의까지의 마케팅 수행 봇)','SQL 쿼리 특화 봇 (마케팅 타겟 고객을 보다 정교하게 추출)']},
+      {logo:L('kb-insurance'), alt:'KB손해보험', t:'보험금 청구 서류 입력 자동화', d:'청구 서류의 정보를 AI-OCR로 추출해\n보험금 청구 업무의 입력 과정을 자동화합니다.', p:'2024.10 ~ 2025.10',
+       s:['AI-OCR 기반 보험금 청구 서류 입력 자동화']},
+      {logo:L('cg'), alt:'건설공제조합', t:'건설공제 CG AX 업무혁신 플랫폼 구축', d:'규정 검색부터 계약서 검토·문서 작성까지,\n핵심 판단에 집중할 수 있는 업무를 지원합니다.', p:'2026.04 ~ 2026.10',
+       s:['온프레미스 기반의 AI 플랫폼 구축','조합 내 지식(규정·매뉴얼·지침·업무자료 등), 규정 이력 학습하여 RAG 기반 업무 챗봇 구현','다양한 유형의 계약서에 AI OCR을 적용하여 심사업무의 Maker 중심에서 Checker 업무 중심으로 전환','부서별 NAS 문서 및 전자결재 완료 문서의 자연어 기반 문서 검색 및 문서 초안 자동작성 기능 제공']},
+      {logo:L('meritz'), alt:'메리츠화재', t:'메리츠화재 생성형 AI 플랫폼 도입', d:'생성형 AI를 업무에 활용할 수 있도록\n전용 플랫폼 도입을 추진합니다.', p:'2025.05 ~ 2027.04', s:['메리츠화재 생성형 AI 플랫폼 도입']},
+      {logo:L('hyundaicard'), alt:'현대카드', t:'현대카드 LLM RAG플랫폼 도입', d:'LLM과 검색증강생성(RAG)을 결합한\n생성형 AI 활용 기반을 구축합니다.', p:'2026.05 ~ 2027.04', s:['현대카드 LLM RAG 플랫폼 구축']},
+      {logo:L('miraeasset'), alt:'미래에셋생명', t:'미래에셋생명보험 차세대 시스템 구축', d:'AI 상담 지원과 지식검색 고도화로\n상담원의 정보 탐색과 고객 응대를 돕습니다.', p:'2025.03.10 ~ 2027.03', s:['AI 상담 어드바이저 시스템 구축','지식검색시스템(KMS) 고도화']},
+      {logo:L('ibk'), alt:'IBK기업은행', t:'IBK 디지털뱅킹\n리빌딩 1단계 추진 프로젝트', d:'기존 디지털뱅킹 채널을 AI·클라우드 기반의\n표준 디지털 플랫폼으로 전환합니다.', p:'2026.07 ~ 2027.07',
+       s:['AI 기반 대고객 금융서비스','기업은행 내부 데이터·업무 시스템 연계','RAG 기반 금융정보 검색·응답','업무별 AI Agent 구성 및 운영관리','고객 질의·업무 요청에 대한 AI 응답','지식검색 기반 서비스','업무 프로세스 자동화','AI 서비스 모니터링·평가·권한관리']},
+      {logo:L('mg'), alt:'MG새마을금고', t:'새마을금고 계정계 최신화 구축', d:'AI 기술을 전산 개발 생산성 향상, 업무 자동화,\n단말 환경 고도화에 핵심적으로 활용합니다.', p:'2026.10 ~ 2029.02',
+       s:['DevOn Agentic AIND 기반의 자율형 전산 개발','AI-OCR과 연계된 공제(보험) 심사 자동화 프로세스','멀티 모델 라우팅 및 거버넌스 (AgenticWorks Router)']},
+      {logo:L('fss'), alt:'금융감독원', t:'AI 기반 불공정거래 대응체계 구축', d:'불공정거래 조사와 민원 업무를 지원하는\nAI 체계 구축을 협의하고 있습니다.', p:'2027.12 (완료예정)', s:['불공정거래 조사','민원 업무 지원']}
+    ]},
+    public:{name:'PUBLIC', sub:'더 가깝고 편리한 공공서비스를 만드는\n공공기관의 AI Agent 도입 사례', list:[
+      {logo:L('scourt'), alt:'대법원', t:'AI 기반 형사재판 및 양형지원을 위한\n지능형 플랫폼 구축', d:'형사재판과 양형 업무를 지원하는\nAI 플랫폼 구축을 협의하고 있습니다.', p:'2026.09 ~ 2028.12',
+       s:['양형시스템 고도화 및 데이터 기반 조성 (양형기초정보 DB 구축 등)','AI 서비스 구축 : 판결문 양형인자 추출·추천, 유사 판결문 검색·요약, 양형기준 작성 지원','대규모언어모델(LLM) 플랫폼 및 빅데이터·AI 분석 기반 구축']},
+      {logo:L('mofa'), alt:'외교부', t:'지능형 외교안보 데이터플랫폼 구축', d:'외교 동향·인물 분석과 영사 서비스,\n다국어 회의 번역·요약을 AI로 지원합니다.', p:'2025.06 ~ 2028.01',
+       s:['예측/선제 대응에 특화된 외교부만의 전략 AI 모델 (글로벌 동향 감지 서비스 및 허위정보 탐지 서비스)','주요 인물 관계 및 주요 외교 인사 분석 서비스','영사 관련 대국민 맞춤형 AI 서비스','다국어 회의 번역 및 요약 서비스']},
+      {logo:L('goe'), alt:'경기도교육청', t:'경기교육 디지털 플랫폼 구축', d:'대화형 소통과 지능형 검색을 연결해\n교육공동체와 행정 업무를 지원합니다.', p:'2025.07 ~ 2026.06',
+       s:['대화형 AI 교육공동체 소통 도우미 서비스','생성형 AI 기반 지능형 검색 연계기능 개발','대민용 AI 학습','업무용 AI 학습','업무 특성을 반영한 답변']}
+    ]},
+    manufacturing:{name:'MANUFACTURING', sub:'새로운 가능성을 연결하고 확장해가는\n제조 산업의 AI Agent 도입 사례', list:[
+      {logo:L('lge'), alt:'LG전자', t:'AX플랫폼 기반\nAgent 개발 체계 구축', d:'번역·문서·법무 등 전사 업무를 연결해\n다양한 Agent 개발과 활용을 확산합니다.', p:'2026.02 ~ 2026.05\n2025.04 ~ 2026.01\n2024.05 ~ 2025.03',
+       s:['통합 AI 서비스 채널','다국어 번역 AI','문서 작성 AI','법무 검토 AI','Career Advisor','SW 개발 효율화','NERP 변화관리 챗봇','안전작업 기준정보 제공','ESG 정보 제공 플랫폼 구축','지식화 문서 자율 관리체계 구축']},
+      {logo:L('lges'), alt:'LG에너지솔루션', t:'GenAI 플랫폼 기반\n생성형AI 서비스 구축', d:'전지·특허 지식검색과 업무 자동화로\n현장과 경영 전반의 정보 활용을 돕습니다.', p:'2024.06 ~ 2025.04',
+       s:['통합 서비스 채널','전지지식 AI Chatbot','NERP 변화관리 Chatbot','특허 AI Chatbot','컴플라이언스 리스크 탐지','GTM 채용프로세스 자동화','QMS 분석 보고서 자동생성','ESG 위험성 평가']},
+      {logo:L('lghh'), alt:'LG생활건강', t:'GenAI 플랫폼 및 AI Agent 구축', d:'업무별 AI Agent 도입을 위한 과제를\n구체화하고 플랫폼·서비스 개발을 추진합니다.', p:'2025.09 ~ 2026.07', s:['과제 구체화 및 개발 진행 중']}
+    ]}
+  };
+  const esc = t => t.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  const cTabs = [...document.querySelectorAll('.ctab')];
+  function showCases(key){
+    const c = CASES[key];
+    cTabs.forEach(t=> t.setAttribute('aria-selected', t.dataset.ind === key));
+    $('#cases-name').textContent = c.name; $('#cases-sub').textContent = c.sub;
+    $('#cases-list').innerHTML = c.list.map(x=>`<article class="case">
+      <div><div class="logo"><img src="${x.logo}" alt="${x.alt}"></div><h3>${esc(x.t)}</h3><p class="desc">${esc(x.d)}</p><p class="period">${esc(x.p)}</p></div>
+      <div class="bar"></div>
+      <ul>${x.s.map(s=>`<li>${CHECK}<span>${esc(s)}</span></li>`).join('')}</ul></article>`).join('');
+    document.getElementById('m-cases').scrollTop = 0;
+  }
+  cTabs.forEach(t=> t.addEventListener('click', ()=>showCases(t.dataset.ind)));
+  document.querySelectorAll('[data-case]').forEach(a=> a.addEventListener('click', e=>{ e.preventDefault(); e.stopPropagation(); showCases(a.dataset.case); openModal('m-cases'); }));
+})();
+</script>
+
+</body>
+</html>
