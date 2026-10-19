@@ -83,7 +83,7 @@ h1,h2,h3{margin:0;font-weight:inherit;text-wrap:balance}
 .hero-title h1{position:absolute;inset:0 0 auto;font-family:var(--f-display);font-size:96px;font-weight:400;letter-spacing:-.03em;line-height:145px;white-space:nowrap;transition:opacity .6s,transform .6s}
 .hero-title h1[aria-hidden="true"]{opacity:0;transform:translateY(24px)}
 .hero-bar{position:absolute;left:15px;top:145px;width:883px;max-width:90%;height:4px;background:var(--grad);transform-origin:left}
-.hero-bar.run{animation:bar 6s linear}
+.hero-bar.run{animation:bar 4s linear}
 @keyframes bar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .hero-desc{position:absolute;top:301px;left:0;width:680px;max-width:100%;font-size:18px;line-height:1.6}
 .hero-media{border-top:1px solid var(--line)}
@@ -182,7 +182,7 @@ h1,h2,h3{margin:0;font-weight:inherit;text-wrap:balance}
 .ind .prog{position:absolute;right:40px;top:456px;width:100px;height:4px;background:rgba(255,255,255,.3);opacity:0;transition:opacity .3s}
 .ind[aria-expanded="true"] .prog{opacity:1}
 .ind .prog i{display:block;height:100%;width:0;background:#fff}
-.ind[aria-expanded="true"] .prog i.run{animation:prog 7s linear forwards}
+.ind[aria-expanded="true"] .prog i.run{animation:prog 4s linear forwards}
 @keyframes prog{to{width:100%}}
 
 /* ---------- Partner ---------- */
@@ -960,7 +960,7 @@ body.locked{overflow:hidden}
     himgs.forEach((t,k)=> t.setAttribute('aria-hidden', k !== hi));
     dots.forEach((t,k)=> t.setAttribute('aria-current', k === hi));
     if (!reduce){ bar.classList.remove('run'); void bar.offsetWidth; bar.classList.add('run'); }
-    clearTimeout(ht); if (!reduce) ht = setTimeout(()=>hero(hi+1), 6000);
+    clearTimeout(ht); if (!reduce) ht = setTimeout(()=>hero(hi+1), 4000);
   }
   dots.forEach((d,k)=> d.addEventListener('click', ()=>hero(k)));
   hero(0);
@@ -1022,7 +1022,7 @@ body.locked{overflow:hidden}
     });
     schedule();
   }
-  function schedule(){ clearTimeout(ut); if (!reduce && !paused) ut = setTimeout(()=>uc((ui+1)%inds.length), 7000); }
+  function schedule(){ clearTimeout(ut); if (!reduce && !paused) ut = setTimeout(()=>uc((ui+1)%inds.length), 4000); }
   inds.forEach((el,k)=>{
     el.addEventListener('click', e=>{ if (e.target.closest('a')) return; if (k!==ui) uc(k); });
     el.addEventListener('keydown', e=>{ if ((e.key==='Enter'||e.key===' ') && !e.target.closest('a')){ e.preventDefault(); uc(k);} });
