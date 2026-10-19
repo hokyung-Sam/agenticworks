@@ -465,6 +465,46 @@ body.locked{overflow:hidden}
   .ab-intro .mark{width:100%;height:auto}.ab-intro .mark img{width:80%}.ab-intro .txt{width:auto;font-size:16px}
   .ab-mods{padding-inline:16px}.cmp-wrap .cmp{max-width:none}
 }
+
+/* ===== Figma fidelity fixes (desktop) ===== */
+@media (min-width:1101px){
+  .hero-title h1{line-height:normal}
+  .tab,.tab:first-child,.tab:last-child{flex:1 1 0;padding:24px}
+  .tab:first-child{padding:24px 16px}
+  .mod-head{padding-bottom:56px}
+  .mod-head .right{gap:16px}
+  .mod-head .eyebrow{height:32px}
+  .mod-copy .sub{margin-top:23px}
+  .solution .steps{margin-bottom:56px}
+  .slider{margin-top:81px}
+  .faq .col{padding-bottom:80px}
+  .faq-item.open .faq-q{padding-bottom:16px}
+  .faq-item .faq-a p{padding-bottom:64px}
+  .subvis .lead{margin-top:23px}
+  .dp-sec .wide{padding-top:91px}
+  .sec-row{margin-bottom:38px}
+  .cards3{grid-template-columns:repeat(3,470px);justify-content:space-between}
+  .ab-intro .txt{align-self:flex-start;margin-top:101px}
+  .ab-values{margin-top:150px}
+  .sup-faq{display:grid;grid-template-columns:351px minmax(0,1295px);align-items:start}
+  .sup-faq .sec-row{margin:0}
+}
+.slide-text h3{font-family:var(--f-kr);line-height:1.3;color:#fff}
+.slide-text .desc{font-family:var(--f-kr);line-height:1.5;color:#fff}
+.problem .eyebrow,.solution .eyebrow{font-size:11px;letter-spacing:.04em}
+.badge.without{opacity:.6;background:#d9d9d9}
+.card3 h3,.lic-row h3{font-weight:400;letter-spacing:-.03em;color:#292929}
+.card3 .lead{font-weight:500}
+.card3 .body{font-weight:300;font-size:16px;line-height:1.6;color:#4e4e4e}
+.card3 .kw{font-family:var(--f-en)}
+[data-page=support] .card3 .body{font-weight:400;font-size:16px;line-height:1.5;color:#454545}
+.card3 .more{font-weight:700;font-size:20px;line-height:1.2}
+.h-xb.h-700{font-weight:700}
+.lic-row p:first-child{font-weight:500}
+.lic-row ul{margin:24px 0 0;padding-left:24px;font-weight:300;font-size:16px;line-height:1.6;color:#4e4e4e}
+.sfaq-q{font-family:var(--f-kr);font-weight:500;font-size:20px}
+.sfaq-item .faq-a p{font-size:16px;line-height:1.5}
+.btn-line{font-family:var(--f-en)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
 </style>
 <style>html,body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
@@ -791,7 +831,7 @@ body.locked{overflow:hidden}
   </section>
   <section class="dp-sec gutter" style="border-bottom:1px solid var(--line)">
     <div class="wide">
-      <div class="sec-row"><h2 class="h-xb">도입검토 세부기준</h2></div>
+      <div class="sec-row"><h2 class="h-xb h-700">도입검토 세부기준</h2></div>
       <div class="cmp-wrap">
         <table class="cmp">
           <colgroup><col class="c1"><col><col><col></colgroup>
@@ -841,7 +881,7 @@ body.locked{overflow:hidden}
     </div>
   </section>
   <section class="dp-sec gutter">
-    <div class="wide">
+    <div class="wide sup-faq">
       <div class="sec-row"><h2 class="h-xb">자주 묻는 질문</h2></div>
       <div class="sfaq" id="sfaq"></div>
     </div>
@@ -894,10 +934,10 @@ body.locked{overflow:hidden}
   <div class="modal-panel lic">
     <button class="modal-x" type="button" data-close aria-label="닫기">✕</button>
     <h2 class="h-xb" id="lic-title">라이선스 정책</h2>
-    <div class="lic-row"><h3 class="h-xb">Perpetual</h3><div><p>라이선스를 일회성으로 구매해 계약된 범위 내에서 지속적으로 이용하는 방식</p><p>영구 라이선스 계약<br>유지보수 계약</p></div></div>
-    <div class="lic-row"><h3 class="h-xb">Subscription</h3><div><p>계약 기간 동안 이용 권한을 제공하고, 구독료를 정기적으로 지불하는 방식</p><p>정기 구독료</p></div></div>
+    <div class="lic-row"><h3 class="h-xb">Perpetual</h3><div><p>라이선스를 일회성으로 구매해 계약된 범위 내에서 지속적으로 이용하는 방식</p><ul><li>영구 라이선스 계약</li><li>유지보수 계약</li></ul></div></div>
+    <div class="lic-row"><h3 class="h-xb">Subscription</h3><div><p>계약 기간 동안 이용 권한을 제공하고, 구독료를 정기적으로 지불하는 방식</p><ul><li>정기 구독료</li></ul></div></div>
     <div class="lic-row"><h3 class="h-xb">Usage Based</h3><div><p>서비스 사용량에 따라 자체 표준 단위인 AWU(AgenticWorks Unit)로 과금되는 방식</p>
-      <p>On-Demand: 사용한 만큼 후불 지불<br>Credit: 선구매 후 사용량 차감<br>Package: 연간 Commit 계약을 통한 AWU 차등 제공</p></div></div>
+      <ul><li>On-Demand: 사용한 만큼 후불 지불</li><li>Credit: 선구매 후 사용량 차감</li><li>Package: 연간 Commit 계약을 통한 AWU 차등 제공</li></ul></div></div>
   </div>
 </div>
 <div class="modal" id="m-cases" role="dialog" aria-modal="true" aria-labelledby="cases-title" hidden>
